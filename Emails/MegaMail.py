@@ -4,7 +4,7 @@
 # pick email column and names X
 # get excel, clean X
 # print new number X
-# email subj, body, attach. Allow for name to be replaced
+# email subj, body (with formatting), attach. Allow for name to be replaced
 # loop email addresses - send
 # Loading bar
 # Wrap with GUI
