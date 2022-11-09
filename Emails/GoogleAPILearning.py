@@ -15,10 +15,11 @@ from email.mime.image import MIMEImage
 from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
 from mimetypes import guess_type as guess_mime_type
+from PW import Dev_email
 
 # Request all access (permission to read/send/receive emails, manage the inbox, and more)
 SCOPES = ['https://mail.google.com/']
-Dev_email = 'devburns22@gmail.com'
+
 
 def gmail_authenticate():
     creds = None
@@ -46,7 +47,42 @@ service = gmail_authenticate()
 
 # Sending Emails
 
+# Steps
+# pick email column and names X
+# get excel, clean X
+# print new number X
+# email subj, body, attach. Allow for name to be replaced
+# loop email addresses - send
+# Loading bar
+# Wrap with GUI
+# Make TKInter pretty
 
+
+import pandas as pd
+# import xlrd
+import tkinter as tk
+
+# window = tk.Tk()
+# theLabel = tk.Label(window, text='Mega Mail', foreground='white', background='black')
+# theLabel.pack()
+# window.mainloop()
+
+excel_file = "E:/EmailTesting.xlsx"
+email = 'email'
+name = 'name'
+
+df = pd.DataFrame(pd.read_excel(excel_file))
+df[email] = df[email].astype('string')
+
+print(df)
+df = df.dropna(axis=0, subset=[email])
+df = df.fillna(0, axis=0)
+df = df.drop_duplicates(subset=email)
+df = df.reset_index()
+del df['index']
+print(df)
+
+print('there are now {} emails after cleaning'.format(len(df)))
 
 
 
@@ -120,13 +156,12 @@ def send_message(service, destination, obj, body, attachments=[]):
     ).execute()
 
 receiving_email = 'devburns22@gmail.com'
-receiving_email2 = 'stuntdude2020@gmail.com'
 
 # example message
 # send_message(service, "destination@domain.com", "This is a subject",
 #             "This is the body of the email", ["test.txt", "anyfile.png"])
 
-send_message(service, receiving_email2, 'Subject stuff', 'A body has a nose')
+send_message(service, receiving_email, 'Subject stuff', 'A body has a nose')
 
 def search_messages(service, query):
     result = service.users().messages().list(userId='me',q=query).execute()
@@ -139,4 +174,7 @@ def search_messages(service, query):
         if 'messages' in result:
             messages.extend(result['messages'])
     return messages
+
+
+# Searching for emails
 
