@@ -4,11 +4,14 @@
 # pick email column and names X
 # get excel, clean X
 # print new number X
-# email subj, body (with formatting), attach. Allow for name to be replaced
-# loop email addresses - send
-# Loading bar
+# email subj X
+# body (with formatting) ... Don't know formatting
+# attach... Excel does not work
+# Allow for name to be replaced ... iloc both name and email
+# loop email addresses - send X
 # Wrap with GUI
 # Make TKInter pretty
+# Loading bar
 # Set a kill date for free trial
 
 import os
@@ -143,8 +146,9 @@ index = df.index
 
 email_count = 0
 
-for df_email in df.loc[:, 'email']:
+for df_email, df_name in df.loc[:, ['email', 'name']]: # pull both Email and Name
     email_count += 1
+    print(df_name)
     # send_message(service, df_email, 'MegaMail email {}'.format(email_count),
     #              'Successful email number {}'.format(email_count))
 
