@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-excel_file = "E:/EmailTesting.xlsx"
+excel_file = "E:\pythonProject\MegaMail\Emails\Testing_Tools\EmailTesting.xlsx"
 email = 'email'
 name = 'name'
 

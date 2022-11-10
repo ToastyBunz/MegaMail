@@ -15,7 +15,7 @@ from email.mime.image import MIMEImage
 from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
 from mimetypes import guess_type as guess_mime_type
-from PW import Dev_email
+from PW import dev_email
 
 # Request all access (permission to read/send/receive emails, manage the inbox, and more)
 SCOPES = ['https://mail.google.com/']
@@ -57,55 +57,6 @@ service = gmail_authenticate()
 # Wrap with GUI
 # Make TKInter pretty
 
-
-import pandas as pd
-# import xlrd
-import tkinter as tk
-
-# window = tk.Tk()
-# theLabel = tk.Label(window, text='Mega Mail', foreground='white', background='black')
-# theLabel.pack()
-# window.mainloop()
-
-excel_file = "E:/EmailTesting.xlsx"
-email = 'email'
-name = 'name'
-
-df = pd.DataFrame(pd.read_excel(excel_file))
-df[email] = df[email].astype('string')
-
-print(df)
-df = df.dropna(axis=0, subset=[email])
-df = df.fillna(0, axis=0)
-df = df.drop_duplicates(subset=email)
-df = df.reset_index()
-del df['index']
-print(df)
-
-print('there are now {} emails after cleaning'.format(len(df)))
-
-
-
-
-# import smtplib
-#
-# Email_address = 'devburns22@gmail.com'
-# Email_password = '' # app password
-#
-# with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-#     smtp.ehlo()
-#     smtp.starttls() # encrypts traffic
-#     smtp.ehlo()
-#
-#     smtp.login()
-#
-#     subject = 'grab dinner this weekend?'
-#     body = 'How about dinner at 6pm this saturday?'
-#
-#     msg = f'Subject: {subject}\n\n{body}'
-#     smtp.sendmail(Email_address, Email_address, msg)
-
-
 # Adds the attachment with the given filename to the given message
 def add_attachment(message, filename):
     content_type, encoding = guess_mime_type(filename)
@@ -137,12 +88,12 @@ def build_message(destination, obj, body, attachments=[]):
     if not attachments: # no attachments given
         message = MIMEText(body)
         message['to'] = destination
-        message['from'] = Dev_email
+        message['from'] = dev_email
         message['subject'] = obj
     else:
         message = MIMEMultipart()
         message['to'] = destination
-        message['from'] = Dev_email
+        message['from'] = dev_email
         message['subject'] = obj
         message.attach(MIMEText(body))
         for filename in attachments:
@@ -161,19 +112,20 @@ receiving_email = 'devburns22@gmail.com'
 # send_message(service, "destination@domain.com", "This is a subject",
 #             "This is the body of the email", ["test.txt", "anyfile.png"])
 
-send_message(service, receiving_email, 'Subject stuff', 'A body has a nose')
+send_message(service, receiving_email, 'Excel attchment testing', 'A body has a thumb',
+             ['E:/pythonProject/MegaMail/Emails/Testing_Tools/EmailTesting.xlsx'])
 
-def search_messages(service, query):
-    result = service.users().messages().list(userId='me',q=query).execute()
-    messages = [ ]
-    if 'messages' in result:
-        messages.extend(result['messages'])
-    while 'nextPageToken' in result:
-        page_token = result['nextPageToken']
-        result = service.users().messages().list(userId='me',q=query, pageToken=page_token).execute()
-        if 'messages' in result:
-            messages.extend(result['messages'])
-    return messages
+# def search_messages(service, query):
+#     result = service.users().messages().list(userId='me',q=query).execute()
+#     messages = [ ]
+#     if 'messages' in result:
+#         messages.extend(result['messages'])
+#     while 'nextPageToken' in result:
+#         page_token = result['nextPageToken']
+#         result = service.users().messages().list(userId='me',q=query, pageToken=page_token).execute()
+#         if 'messages' in result:
+#             messages.extend(result['messages'])
+#     return messages
 
 
 # Searching for emails
