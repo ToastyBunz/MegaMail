@@ -5,11 +5,11 @@
 # get excel, clean X
 # print new number X
 # email subj X
-# body (with formatting) ... Don't know formatting
-# attach... Excel does not work
-# Allow for name to be replaced ... iloc both name and email
+# body (with formatting) X will examine more extensively later
+# Allow for name to be replaced ... loc both name and email X
 # loop email addresses - send X
-# Wrap with GUI
+# Add signature
+# Wrap with Tkinter GUI
 # Make TKInter pretty
 # Loading bar
 # Set a kill date for free trial
@@ -19,7 +19,7 @@ import pickle
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-#for encoding/decoding messages in base 64
+# for encoding/decoding messages in base 64
 
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 # for dealing with attachement MIME types
@@ -40,16 +40,31 @@ import tkinter as tk
 # theLabel.pack()
 # window.mainloop()
 
-excel_file = "E:/EmailTesting.xlsx"
-email = 'email'
-name = 'name'
+outreach_file = "E:/EmailTesting.xlsx"
 
-df = pd.DataFrame(pd.read_excel(excel_file))
-df[email] = df[email].astype('string')
 
-df = df.dropna(axis=0, subset=[email])
+# email = 'email'
+# name = 'name'
+
+class MyError(Exception):
+    def __int__(self, message):
+        self.message = message
+
+
+unkown_file = MyError('Unknown filetype, please enter CSV or Excel')
+
+if '.xlsx' in outreach_file:
+    df = pd.DataFrame(pd.read_excel(outreach_file))
+elif '.csv' in outreach_file:
+    df = pd.DataFrame(pd.read_csv(outreach_file))
+else:
+    raise unkown_file
+
+df['email'] = df['email'].astype('string')
+
+df = df.dropna(axis=0, subset=['email'])
 df = df.fillna(0, axis=0)
-df = df.drop_duplicates(subset=email)
+df = df.drop_duplicates(subset='email')
 df = df.reset_index()
 del df['index']
 # print(df)
@@ -78,6 +93,7 @@ def gmail_authenticate():
         with open("token.pickle", "wb") as token:
             pickle.dump(creds, token)
     return build('gmail', 'v1', credentials=creds)
+
 
 # get the Gmail API service
 service = gmail_authenticate()
@@ -110,8 +126,9 @@ def add_attachment(message, filename):
     msg.add_header('Content-Disposition', 'attachment', filename=filename)
     message.attach(msg)
 
+
 def build_message(destination, obj, body, attachments=[]):
-    if not attachments: # no attachments given
+    if not attachments:  # no attachments given
         message = MIMEText(body)
         message['to'] = destination
         message['from'] = dev_email
@@ -126,11 +143,13 @@ def build_message(destination, obj, body, attachments=[]):
             add_attachment(message, filename)
     return {'raw': urlsafe_b64encode(message.as_bytes()).decode()}
 
+
 def send_message(service, destination, obj, body, attachments=[]):
     return service.users().messages().send(
-      userId="me",
-      body=build_message(destination, obj, body, attachments)
+        userId="me",
+        body=build_message(destination, obj, body, attachments)
     ).execute()
+
 
 receiving_email = 'devburns22@gmail.com'
 
@@ -142,14 +161,21 @@ receiving_email = 'devburns22@gmail.com'
 #              ['E:/pythonProject/MegaMail/Emails/Testing_Tools/EmailTesting.xlsx'])
 
 print(df)
-index = df.index
+want_name = True
 
-email_count = 0
+def MegaMail_Send():
+    for i in range(len(df)):
+        email = df.loc[i, 'email']
+        name = df.loc[i, 'name']
+        email_sbj_name = 'Hello Mr.{}'.format(name)
+        email_body_name = 'Hello Mr.{} would you like to user our services'.format(name)
+        email_sbj_noname = 'Greetings'
+        email_body_noname = 'hello frick you, would you like to use our services'
 
-for df_email, df_name in df.loc[:, ['email', 'name']]: # pull both Email and Name
-    email_count += 1
-    print(df_name)
-    # send_message(service, df_email, 'MegaMail email {}'.format(email_count),
-    #              'Successful email number {}'.format(email_count))
+        if name == 0 or want_name is False:
+            send_message(service, email, email_sbj_noname, email_body_noname)
+        else:
+            send_message(service, email, email_sbj_name, email_body_name)
 
+# MegaMail_Send()
 print('all done')
