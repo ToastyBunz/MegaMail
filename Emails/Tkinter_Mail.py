@@ -44,6 +44,7 @@ def check_paths():
         # TODO check if CSV or EXCEL
     else:
         top = Toplevel()
+        # TODO Try globalizing top
 
         def popup():
             response = messagebox.askyesno("Ready to send", "Are you ready to send X emails")
@@ -52,6 +53,7 @@ def check_paths():
             else:
                 Label(top, text='You clicked No!').grid(row=8, column=1)
 
+        # TODO branches for auto name input and generic emails
         subjt = Entry(top, width=75)
         body = Text(top, width=75)
         signature_button = Button(top, text='Click to add signature?')  # if yes, else no
@@ -100,6 +102,7 @@ exel_input = Entry(root, width=60)
 
 sp4 = Label(root, text="")
 nxt_button_input = Button(root, text='Next>', command=check_paths, foreground='white', background="#34A2FE", width=15)
+# TODO Error pop up that prints errors
 
 sp1.grid(row=1, column=0)
 e_label.grid(row=2, column=1)
