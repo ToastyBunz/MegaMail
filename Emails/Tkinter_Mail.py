@@ -31,9 +31,9 @@ def check_paths():
     personal_email = email_input.get()
     json_key = jsan_input.get()
     exel_contacts = exel_input.get()
-    fixed_personal_email = fixed_path(personal_email)
     fixed_json_key = fixed_path(json_key)
     fixed_exel_contacts = fixed_path(exel_contacts)
+    # TODO Add pop up that tells: need to input all boxes before you can continue
     if not path_exists(fixed_json_key):
         print('Error: Json PATH is not valid')
         print(fixed_json_key)
@@ -75,7 +75,7 @@ def check_paths():
         signature_name.insert(0, "Enter name: John Doe")
         signature_number.insert(0, "Enter number: Office (999) 888 - 777")
 
-    return fixed_personal_email, fixed_json_key, fixed_exel_contacts, top
+    return personal_email, fixed_json_key, fixed_exel_contacts, top
 
 
 # def popup():

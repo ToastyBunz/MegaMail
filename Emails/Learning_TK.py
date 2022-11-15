@@ -52,9 +52,30 @@ import tkinter as tk
 # window.mainloop()
 
 
-window = tk.Tk()
-e = tk.Entry(window)
-e.pack()
-e.insert(0, 'Enter Your name')
-window.mainloop()
+# window = tk.Tk()
+# e = tk.Entry(window)
+# e.pack()
+# e.insert(0, 'Enter Your name')
+# window.mainloop()
 
+from tkinter import *
+
+
+root = Tk()
+root.title('monkey')
+
+def getting_box():
+    my_label = Label(root, text='')
+    my_label.pack()
+    my_label.config(text=my_text.get(1.0, END))
+
+my_text = Text(root, width=50, height=20)
+my_text.pack()
+
+button = Button(root, text='get text', command=getting_box)
+button.pack()
+
+# my_label = Label(root, text='')
+# my_label.pack()
+
+root = mainloop()
