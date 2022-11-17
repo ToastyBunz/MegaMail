@@ -1,19 +1,3 @@
-# make tk pretty again https://github.com/TomSchimansky/CustomTkinter
-
-# Steps
-# pick email column and names X
-# get excel, clean X
-# print new number X
-# email subj X
-# body (with formatting) X will examine more extensively later
-# Allow for name to be replaced ... loc both name and email X
-# loop email addresses - send X
-# Add signature
-# Wrap with Tkinter GUI
-# Make TKInter pretty
-# Loading bar
-# Set a kill date for free trial
-
 import os
 import pickle
 from googleapiclient.discovery import build
@@ -29,52 +13,42 @@ from email.mime.image import MIMEImage
 from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
 from mimetypes import guess_type as guess_mime_type
+import os
+
 from PW import dev_email
 
 import pandas as pd
-# import xlr
-import tkinter as tk
 
-# window = tk.Tk()
-# theLabel = tk.Label(window, text='Mega Mail', foreground='white', background='black')
-# theLabel.pack()
-# window.mainloop()
+# Request all access (permission to read/send/receive emails, manage the inbox, and more)
+SCOPES = ['https://mail.google.com/']
 
-outreach_file = "E:/EmailTesting.xlsx"
-
-
-# email = 'email'
-# name = 'name'
 
 class MyError(Exception):
     def __int__(self, message):
         self.message = message
 
 
-unkown_file = MyError('Unknown filetype, please enter CSV or Excel')
+unknown_file = MyError('Unknown filetype, please enter CSV or Excel')
 
-if '.xlsx' in outreach_file:
-    df = pd.DataFrame(pd.read_excel(outreach_file))
-elif '.csv' in outreach_file:
-    df = pd.DataFrame(pd.read_csv(outreach_file))
-else:
-    raise unkown_file
+def contacts_processing(outreach_file):
+    if outreach_file.endswith('.xlsx'):
+        df = pd.DataFrame(pd.read_excel(outreach_file))
+    elif outreach_file.endswith('.csv'):
+        df = pd.DataFrame(pd.read_csv(outreach_file))
+    else:
+        raise unknown_file
 
-df['email'] = df['email'].astype('string')
+    df['email'] = df['email'].astype('string')
 
-df = df.dropna(axis=0, subset=['email'])
-df = df.fillna(0, axis=0)
-df = df.drop_duplicates(subset='email')
-df = df.reset_index()
-del df['index']
-# print(df)
-# print('there are now {} emails after cleaning'.format(len(df)))
-
-# Request all access (permission to read/send/receive emails, manage the inbox, and more)
-SCOPES = ['https://mail.google.com/']
+    df = df.dropna(axis=0, subset=['email'])
+    df = df.fillna(0, axis=0)
+    df = df.drop_duplicates(subset='email')
+    df = df.reset_index()
+    del df['index']
+    return df
 
 
-def gmail_authenticate():
+def gmail_authenticate(json_file):
     creds = None
     # the file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first time
@@ -87,7 +61,7 @@ def gmail_authenticate():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(json_file, SCOPES)
             creds = flow.run_local_server(port=0)
         # save the credentials for the next run
         with open("token.pickle", "wb") as token:
@@ -96,7 +70,7 @@ def gmail_authenticate():
 
 
 # get the Gmail API service
-service = gmail_authenticate()
+# service = gmail_authenticate()
 
 
 # Adds the attachment with the given filename to the given message
@@ -127,16 +101,16 @@ def add_attachment(message, filename):
     message.attach(msg)
 
 
-def build_message(destination, obj, body, attachments=[]):
+def build_message(email, destination, obj, body, attachments=[]):
     if not attachments:  # no attachments given
         message = MIMEText(body)
         message['to'] = destination
-        message['from'] = dev_email
+        message['from'] = email
         message['subject'] = obj
     else:
         message = MIMEMultipart()
         message['to'] = destination
-        message['from'] = dev_email
+        message['from'] = email
         message['subject'] = obj
         message.attach(MIMEText(body))
         for filename in attachments:
@@ -144,10 +118,10 @@ def build_message(destination, obj, body, attachments=[]):
     return {'raw': urlsafe_b64encode(message.as_bytes()).decode()}
 
 
-def send_message(service, destination, obj, body, attachments=[]):
+def send_message(service, email, destination, obj, body, attachments=[]):
     return service.users().messages().send(
         userId="me",
-        body=build_message(destination, obj, body, attachments)
+        body=build_message(email, destination, obj, body, attachments)
     ).execute()
 
 
@@ -160,19 +134,21 @@ def send_message(service, destination, obj, body, attachments=[]):
 # send_message(service, receiving_email, 'Excel attchment testing', 'A body has a thumb',
 #              ['E:/pythonProject/MegaMail/Emails/Testing_Tools/EmailTesting.xlsx'])
 
-def MegaMail_Send(want_name):
+want_name = True
+
+
+def MegaMail_Send(service, df, email_sbj_noname, email_body_noname):
     for i in range(len(df)):
         email = df.loc[i, 'email']
         name = df.loc[i, 'name']
-        email_sbj_name = 'Hello Mr.{}'.format(name)
-        email_body_name = 'Hello Mr.{} would you like to user our services'.format(name)
-        email_sbj_noname = 'Greetings'
-        email_body_noname = 'hello frick you, would you like to use our services'
+        # email_sbj_name = 'Hello Mr.{}'.format(name)
+        # email_body_name = 'Hello Mr.{} would you like to user our services'.format(name)
+        # email_sbj_noname = 'Greetings'
+        # email_body_noname = 'hello frick you, would you like to use our services'
 
         if name == 0 or want_name is False:
             send_message(service, email, email_sbj_noname, email_body_noname)
         else:
-            send_message(service, email, email_sbj_name, email_body_name)
+            # send_message(service, email, email_sbj_name, email_body_name)
+            pass
 
-# MegaMail_Send()
-print('all done')
