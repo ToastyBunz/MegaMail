@@ -40,7 +40,7 @@ import tkinter as tk
 # theLabel.pack()
 # window.mainloop()
 
-outreach_file = "E:/EmailTesting.xlsx"
+outreach_file = "S:\DevStuff\EmailTesting.xlsx"
 
 
 # email = 'email'
@@ -164,8 +164,8 @@ def MegaMail_Send(want_name):
     for i in range(len(df)):
         email = df.loc[i, 'email']
         name = df.loc[i, 'name']
-        email_sbj_name = 'Hello Mr.{}'.format(name)
-        email_body_name = 'Hello Mr.{} would you like to user our services'.format(name)
+        email_sbj_name = 'Hello Mr.{}, it is 11'.format(name)
+        email_body_name = 'Hello Mr.{} would you like to user our services it is 11'.format(name)
         email_sbj_noname = 'Greetings'
         email_body_noname = 'hello frick you, would you like to use our services'
 

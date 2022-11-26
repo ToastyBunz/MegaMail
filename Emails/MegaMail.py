@@ -9,8 +9,7 @@
 # MVP todo
 # subject box save input X
 # body save input X
-# authenticate and send
-# warning pop up have number of emails
+# warning pop up have number of emails X
 # body and subj into email send button sends
 # authenticate and send
 # Test loop
@@ -24,7 +23,13 @@
 # HTML email
 # click add signature
 # signature
+# 2 threads (A/B testing)
+# Email statistics (opens and responses)
 # combine fixed_path into spreadsheet_path_exists and json_path exists
+
+# level 3 TODO
+# chrome extension
+# more than two strands
 
 
 # make tk pretty again https://github.com/TomSchimansky/CustomTkinter
@@ -84,6 +89,7 @@ SCOPES = ['https://mail.google.com/']
 # send_message(service, receiving_email, 'Excel attchment testing', 'A body has a thumb',
 #              ['E:/pythonProject/MegaMail/Emails/Testing_Tools/EmailTesting.xlsx'])
 
+
 want_name = False
 
 
@@ -114,7 +120,7 @@ def spredsheet_path_exists(path):
         messagebox.showerror("Missing Fild", 'This is not a valid Excel or CSV file')
 
 def json_path_exists(path):
-    testing_link = "C:/Users/natha/Downloads/dev_key.json"
+    testing_link = "C:/Users/natha/Downloads/dev_key2.json"
     j = '.json'
     if path.endswith(j) and os.path.exists(path):
         return 1
@@ -136,9 +142,13 @@ def check_paths():
     global personal_email
     global fixed_json_key
     global fixed_exel_contacts
+
+    # get inputs
     personal_email = email_input.get()
     json_key = jsan_input.get()
     exel_contacts = exel_input.get()
+
+    # files with fixed paths
     fixed_json_key = fixed_path(json_key)
     fixed_exel_contacts = fixed_path(exel_contacts)
 
@@ -163,14 +173,16 @@ def email_window():
     #     my_label.config(text=body_stuff)
 
     def popup(window):
-        response = messagebox.askyesno("Ready to send", "Are you ready to send X emails")
-        # email_contacts = contacts_processing(fixed_exel_contacts)
+        contacts_df = contacts_processing(fixed_exel_contacts)
+        num_emails = len(contacts_df['email'])
+        response = messagebox.askyesno("Ready to send", "Are you ready to send {} emails?".format(num_emails))
+        # contacts_df = contacts_processing(fixed_exel_contacts)
         # service = gmail_authenticate(fixed_json_key)
         if response:
-            email_contacts = contacts_processing(fixed_exel_contacts)
+            # print(contacts_df)
             service = gmail_authenticate(fixed_json_key)
             Label(window, text='You clicked YES!').grid(row=8, column=1)
-            MegaMail_Send(service, email_contacts, subjt.get(), body.get(1.0, END))
+            MegaMail_Send(service, contacts_df, subjt.get(), body.get(1.0, END))
         else:
             Label(window, text='You clicked No!').grid(row=8, column=1)
 
@@ -198,9 +210,9 @@ def email_window():
     signature_name.insert(0, "Enter name: John Doe")
     signature_number.insert(0, "Enter number: Office (999) 888 - 777")
 
-    # email_contacts = contacts_processing(fixed_excel_contacts)
+    # contacts_df = contacts_processing(fixed_excel_contacts)
     # service = gmail_authenticate(fixed_json_key)
-    # MegaMail_Send(service, email_contacts, subjt.get(), body.get(1.0, END))
+    # MegaMail_Send(service, contacts_df, subjt.get(), body.get(1.0, END))
 
 
     return top
