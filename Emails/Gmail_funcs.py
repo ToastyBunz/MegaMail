@@ -23,31 +23,6 @@ import pandas as pd
 SCOPES = ['https://mail.google.com/']
 
 
-class MyError(Exception):
-    def __int__(self, message):
-        self.message = message
-
-
-unknown_file = MyError('Unknown filetype, please enter CSV or Excel')
-
-def contacts_processing(outreach_file):
-    if outreach_file.endswith('.xlsx'):
-        df = pd.DataFrame(pd.read_excel(outreach_file))
-    elif outreach_file.endswith('.csv'):
-        df = pd.DataFrame(pd.read_csv(outreach_file))
-    else:
-        raise unknown_file
-
-    df['email'] = df['email'].astype('string')
-
-    df = df.dropna(axis=0, subset=['email'])
-    df = df.fillna(0, axis=0)
-    df = df.drop_duplicates(subset='email')
-    df = df.reset_index()
-    del df['index']
-    return df
-
-
 def gmail_authenticate(json_file):
     creds = None
     # the file token.pickle stores the user's access and refresh tokens, and is
@@ -135,21 +110,23 @@ def send_message(service, email, destination, obj, body, attachments=[]):
 # send_message(service, receiving_email, 'Excel attchment testing', 'A body has a thumb',
 #              ['E:/pythonProject/MegaMail/Emails/Testing_Tools/EmailTesting.xlsx'])
 
-want_name = True
 
-
-def MegaMail_Send(service, df, email_sbj_noname, email_body_noname):
+def megamail_send(service, df, sender_email, email_sbj_noname, email_body_noname, want_name=0):
     for i in range(len(df)):
-        email = df.loc[i, 'email']
+        destination = df.loc[i, 'email']
         name = df.loc[i, 'name']
         # email_sbj_name = 'Hello Mr.{}'.format(name)
         # email_body_name = 'Hello Mr.{} would you like to user our services'.format(name)
         # email_sbj_noname = 'Greetings'
         # email_body_noname = 'hello frick you, would you like to use our services'
 
-        if name == 0 or want_name is False:
-            send_message(service, email, email_sbj_noname, email_body_noname)
+        if not want_name:
+            send_message(service, sender_email, destination, email_sbj_noname, email_body_noname)
         else:
             # send_message(service, email, email_sbj_name, email_body_name)
             pass
 
+
+# service = gmail_authenticate("C:/Users/natha/Downloads/dev_key2.json")
+#
+# send_message(service, 'devburns22@gmail.com', 'devburns22+test1@gmail.com', 'testing send mess on Gmail_funcs', 'yup')

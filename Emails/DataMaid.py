@@ -2,22 +2,37 @@
 
 import pandas as pd
 
-excel_file = "E:\pythonProject\MegaMail\Emails\Testing_Tools\EmailTesting.xlsx"
-email = 'email'
-name = 'name'
+# excel_file = "S:/Python/Code/MegaMail/Emails/Testing_Tools/EmailTesting.xlsx"
+# email = 'email'
+# name = 'name'
+#
+# df = pd.DataFrame(pd.read_excel(excel_file))
+# df[email] = df[email].astype('string')
 
-df = pd.DataFrame(pd.read_excel(excel_file))
-df[email] = df[email].astype('string')
+class MyError(Exception):
+    def __int__(self, message):
+        self.message = message
 
-print(df)
-df = df.dropna(axis=0, subset=[email])
-df = df.fillna(0, axis=0)
-df = df.drop_duplicates(subset=email)
-df = df.reset_index()
-del df['index']
-print(df)
 
-print('there are now {} emails after cleaning'.format(len(df)))
+unknown_file = MyError('Unknown filetype, please enter CSV or Excel')
+
+
+def contacts_processing(outreach_file):
+    if outreach_file.endswith('.xlsx'):
+        df = pd.DataFrame(pd.read_excel(outreach_file))
+    elif outreach_file.endswith('.csv'):
+        df = pd.DataFrame(pd.read_csv(outreach_file))
+    else:
+        raise unknown_file
+
+    df['email'] = df['email'].astype('string')
+
+    df = df.dropna(axis=0, subset=['email'])
+    df = df.fillna(0, axis=0)
+    df = df.drop_duplicates(subset='email')
+    df = df.reset_index()
+    del df['index']
+    return df
 
 
 def detect_email_column(dataframe):
@@ -32,5 +47,10 @@ def detect_email_column(dataframe):
 
 def get_email_column(dataframe):
     email_column = detect_email_column(dataframe)
-    return df.iloc[:, email_column]
+    return dataframe.iloc[:, email_column]
 
+
+def get_email_in_column(dataframe, index):
+    # UNNECESSARY MEGA MAIL ALREADY DOES: This function is meant to be paired with a loop to return emails one at a time
+    email_column = dataframe.columns.get_loc('email')
+    return dataframe.iloc[index, email_column]

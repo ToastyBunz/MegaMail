@@ -20,7 +20,7 @@ import datetime
 SCOPES = ['https://mail.google.com/']
 our_email = 'devburns22@gmail.com'
 
-today = datetime.datetime.s
+# today = datetime.datetime.s
 
 def gmail_authenticate():
     creds = None
@@ -181,8 +181,8 @@ def MegaMail_Send(want_name):
         else:
             send_message(service, email, email_sbj_name, email_body_name)
 
-# MegaMail_Send(0)
-send_message(service, "devburns22@gmail.com", "T29","What the fikklesticks")
+MegaMail_Send(1)
+# send_message(service, "devburns22@gmail.com", "T29","What the fikklesticks")
 print('all done')
 
 

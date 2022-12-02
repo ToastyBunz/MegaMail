@@ -9,17 +9,21 @@
 # MVP todo
 # subject box save input X
 # body save input X
-# body input saves formatting
 # warning pop up have number of emails X
-# body and subj into email send button sends
-# authenticate and send
-# loop works
+# email loop works X
+# body and subj into email send button sends X
+# Some sort of completed confirmation (if not loading bar) X
+
+# refresh token every new day login or every 24th token
+# email column input
 # HTML version of Warner email
 # save as exe file
+# Logo for exe
 # Set Kill date for free trial
 
 # level 2 todo
-# validate email
+# attachements
+# validate email (does destination exist?)
 # Option to use name column
 # loading bar
 # HTML email
@@ -59,26 +63,12 @@
 from tkinter import *
 from tkinter import messagebox
 import os
-# import pickle
-# from googleapiclient.discovery import build
-# from google_auth_oauthlib.flow import InstalledAppFlow
-# from google.auth.transport.requests import Request
-# # for encoding/decoding messages in base 64
-#
-# from base64 import urlsafe_b64decode, urlsafe_b64encode
-# # for dealing with attachement MIME types
-# from email.mime.text import MIMEText
-# from email.mime.multipart import MIMEMultipart
-# from email.mime.image import MIMEImage
-# from email.mime.audio import MIMEAudio
-# from email.mime.base import MIMEBase
-# from mimetypes import guess_type as guess_mime_type
 
 import pandas as pd
 
-from Gmail_funcs import contacts_processing
+from DataMaid import contacts_processing
 from Gmail_funcs import gmail_authenticate
-from Gmail_funcs import MegaMail_Send
+from Gmail_funcs import megamail_send
 
 
 # Request all access (permission to read/send/receive emails, manage the inbox, and more)
@@ -99,6 +89,7 @@ root = Tk()
 mm_label = Label(root, text="Mega Mail by Nathan Burns", font='Helvetica 14', foreground='white', background="#34A2FE", width=60)
 mm_label.grid(row=0, column=1, columnspan=2)
 
+
 def fixed_path(path):
     if path[0] == '"':
         path = path[1:]
@@ -106,6 +97,7 @@ def fixed_path(path):
     else:
         pass
     return path.replace("\\", '/')
+
 
 def path_exists(path):
     return os.path.exists(path)
@@ -178,19 +170,17 @@ def email_window():
         contacts_df = contacts_processing(fixed_exel_contacts)
         num_emails = len(contacts_df['email'])
         response = messagebox.askyesno("Ready to send", "Are you ready to send {} emails?".format(num_emails))
-        # contacts_df = contacts_processing(fixed_exel_contacts)
-        # service = gmail_authenticate(fixed_json_key)
         if response:
             # print(contacts_df)
             service = gmail_authenticate(fixed_json_key)
-            Label(window, text='You clicked YES!').grid(row=8, column=1)
-            MegaMail_Send(service, contacts_df, subjt.get(), body.get(1.0, END))
+            megamail_send(service, contacts_df, personal_email, subjt.get(), body.get(1.0, END))
+            Label(window, text='All Emails Sent!').grid(row=8, column=1)
         else:
             Label(window, text='You clicked No!').grid(row=8, column=1)
 
     # TODO branches for auto name input and generic emails !!! THIS IS LAST !!!
-    subjt = Entry(top, width=75)
-    body = Text(top, width=75, font=("Helvetica", 12))
+    subjt = Entry(top, width=75, font=("calibri", 14))
+    body = Text(top, width=75, font=("Calibri", 14))
     signature_button = Button(top, text='Click to add signature?')  # if yes, else no
     signature_name = Entry(top, width=40)
     signature_number = Entry(top, width=40)
@@ -210,7 +200,8 @@ def email_window():
     subjt.insert(0, "Email Subject Here")
     body.insert(INSERT, "Email Body Here")
     signature_name.insert(0, "Enter name: John Doe")
-    signature_number.insert(0, "Enter number: Office (999) 888 - 777")
+    signature_number.insert(0, "Enter number: Office: (999) 888 - 777")
+    signature_email.insert(0, "Enter email. J.Doe@gmail.com")
 
     # contacts_df = contacts_processing(fixed_excel_contacts)
     # service = gmail_authenticate(fixed_json_key)
