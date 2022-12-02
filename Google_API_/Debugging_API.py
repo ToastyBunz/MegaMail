@@ -1,14 +1,10 @@
-"""GMAIL API referance baseline"""
-
-# TODO external file that destroys pickle on the 24th usage then generates new one.
-
 import os
 import pickle
+# Gmail API utils
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-# for encoding/decoding messages in base 64
-
+# for encoding/decoding messages in base64
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 # for dealing with attachement MIME types
 from email.mime.text import MIMEText
@@ -18,13 +14,13 @@ from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
 from mimetypes import guess_type as guess_mime_type
 
-import pandas as pd
-from PW import dev_email
-
+import datetime
 
 # Request all access (permission to read/send/receive emails, manage the inbox, and more)
 SCOPES = ['https://mail.google.com/']
+our_email = 'devburns22@gmail.com'
 
+today = datetime.datetime.s
 
 def gmail_authenticate():
     creds = None
@@ -46,9 +42,48 @@ def gmail_authenticate():
     return build('gmail', 'v1', credentials=creds)
 
 
-# get the Gmail API service
-service = gmail_authenticate()
+# def gmail_authenticate():
+#     creds = None
+#     # the file token.pickle stores the user's access and refresh tokens, and is
+#     # created automatically when the authorization flow completes for the first time
+#     if os.path.exists("token.pickle"):
+#         with open("token.pickle", "rb") as token:
+#             creds = pickle.load(token)
+#     # if there are no (valid) credentials availablle, let the user log in.
+#     if not creds or not creds.valid:
+#         if creds and creds.expired and creds.refresh_token:
+#             creds.refresh(Request())
+#         else:
+#             flow = InstalledAppFlow.from_client_secrets_file('C:/Users/natha/Downloads/credentials.json', SCOPES)
+#             creds = flow.run_local_server(port=0)
+#         # save the credentials for the next run
+#         with open("token.pickle", "wb") as token:
+#             pickle.dump(creds, token)
+#     return build('gmail', 'v1', credentials=creds)
 
+# def gmail_authenticate(json_file):
+#     creds = None
+#     # the file token.pickle stores the user's access and refresh tokens, and is
+#     # created automatically when the authorization flow completes for the first time
+#     try:
+#         with open("token.pickle", "rb") as token:
+#             creds = pickle.load(token)
+#             print('this is token', creds)
+#     # if there are no (valid) credentials availablle, let the user log in.
+#     except:
+#         try:
+#             creds.refresh(Request())
+#         except:
+#             flow = InstalledAppFlow.from_client_secrets_file(json_file, SCOPES)
+#             creds = flow.run_local_server(port=0)
+#         # save the credentials for the next run
+#         with open("token.pickle", "wb") as token:
+#             pickle.dump(creds, token)
+#     return build('gmail', 'v1', credentials=creds)
+
+# get the Gmail API service
+# C:/Users/natha/Downloads/credentials.json'
+service = gmail_authenticate()
 
 def add_attachment(message, filename):
     content_type, encoding = guess_mime_type(filename)
@@ -81,12 +116,12 @@ def build_message(destination, obj, body, attachments=[]):
     if not attachments: # no attachments given
         message = MIMEText(body)
         message['to'] = destination
-        message['from'] = dev_email
+        message['from'] = our_email
         message['subject'] = obj
     else:
         message = MIMEMultipart()
         message['to'] = destination
-        message['from'] = dev_email
+        message['from'] = our_email
         message['subject'] = obj
         message.attach(MIMEText(body))
         for filename in attachments:
@@ -101,15 +136,14 @@ def send_message(service, destination, obj, body, attachments=[]):
     ).execute()
 
 
-# receiving_email = 'devburns22@gmail.com'
+# send_message(service, "devburns22@gmail.com", "test 4",
+#             "This is the body of the email")
 
-# example message
-# send_message(service, "destination@domain.com", "This is a subject",
-#             "This is the body of the email", ["test.txt", "anyfile.png"])
 
+# TESTING
+import pandas as pd
 
 outreach_file = "S:\DevStuff\EmailTesting.xlsx"
-
 
 class MyError(Exception):
     def __int__(self, message):
@@ -132,15 +166,12 @@ df = df.fillna(0, axis=0)
 df = df.drop_duplicates(subset='email')
 df = df.reset_index()
 del df['index']
-# print(df)
-# print('there are now {} emails after cleaning'.format(len(df)))
-
 
 def MegaMail_Send(want_name):
     for i in range(len(df)):
         email = df.loc[i, 'email']
         name = df.loc[i, 'name']
-        email_sbj_name = 'API test 5'.format(name)
+        email_sbj_name = 'T1'.format(name)
         email_body_name = 'Hello Mr.{} the api says frick you'.format(name)
         email_sbj_noname = 'API Test 5'
         email_body_noname = 'hello the api says frick you'
@@ -150,5 +181,9 @@ def MegaMail_Send(want_name):
         else:
             send_message(service, email, email_sbj_name, email_body_name)
 
-MegaMail_Send(1)
+# MegaMail_Send(0)
+send_message(service, "devburns22@gmail.com", "T29","What the fikklesticks")
 print('all done')
+
+
+# TESTING END

@@ -9,12 +9,14 @@
 # MVP todo
 # subject box save input X
 # body save input X
+# body input saves formatting
 # warning pop up have number of emails X
 # body and subj into email send button sends
 # authenticate and send
-# Test loop
+# loop works
+# HTML version of Warner email
 # save as exe file
-# expire dec 15
+# Set Kill date for free trial
 
 # level 2 todo
 # validate email
@@ -153,9 +155,9 @@ def check_paths():
     fixed_exel_contacts = fixed_path(exel_contacts)
 
     # if not path_exists(fixed_json_key):
-    if not json_path_exists(fixed_json_key):  # TODO Switch back
+    if not json_path_exists(fixed_json_key):
         pass
-    elif not spredsheet_path_exists(fixed_exel_contacts):  # TODO Switch back
+    elif not spredsheet_path_exists(fixed_exel_contacts):
         pass
     else:
         top = email_window() # subjt, body, signature
