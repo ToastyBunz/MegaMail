@@ -6,6 +6,8 @@
 # Body (Text box)
 # Signature (Text Box, maybe multiple single lines)
 
+# make tk pretty again https://github.com/TomSchimansky/CustomTkinter
+
 # MVP todo
 # subject box save input X
 # body save input X
@@ -13,15 +15,17 @@
 # email loop works X
 # body and subj into email send button sends X
 # Some sort of completed confirmation (if not loading bar) X
+# refresh token every new day login or every 24th token X (kinda needs work)
+# Remove signature X
 
-# refresh token every new day login or every 24th token
-# email column input
 # HTML version of Warner email
 # save as exe file
 # Logo for exe
 # Set Kill date for free trial
 
-# level 2 todo
+# level 2
+# Make TK beautiful again
+# email column input
 # attachements
 # validate email (does destination exist?)
 # Option to use name column
@@ -33,7 +37,7 @@
 # Email statistics (opens and responses)
 # combine fixed_path into spreadsheet_path_exists and json_path exists
 
-# level 3 TODO
+# level 3
 # chrome extension
 # more than two strands
 
@@ -59,16 +63,16 @@
 # 181-183 and 203 - 204
 # should go into 127
 
-
+from datetime import datetime
 from tkinter import *
 from tkinter import messagebox
 import os
 
-import pandas as pd
-
 from DataMaid import contacts_processing
 from Gmail_funcs import gmail_authenticate
 from Gmail_funcs import megamail_send
+from Refresh_tracking import file_run_counter
+from Refresh_tracking import current_date
 
 
 # Request all access (permission to read/send/receive emails, manage the inbox, and more)
@@ -84,10 +88,13 @@ SCOPES = ['https://mail.google.com/']
 
 want_name = False
 
+expiration = '15-12-2022'
+
 
 root = Tk()
 mm_label = Label(root, text="Mega Mail by Nathan Burns", font='Helvetica 14', foreground='white', background="#34A2FE", width=60)
 mm_label.grid(row=0, column=1, columnspan=2)
+
 
 
 def fixed_path(path):
@@ -121,6 +128,16 @@ def json_path_exists(path):
     else:
         messagebox.showerror("Missing Fild", 'This is not a valid json file')
 
+def product_expired():
+    formatting = '%d-%m-%Y'
+    today = datetime.today().strftime(formatting)
+    today = datetime.strptime(today, formatting)
+    expiration_date = datetime.strptime(expiration, formatting)
+    if today < expiration_date:
+        return 1
+    else:
+        messagebox.showerror("This software has expired")
+
 # def popup(window):
 #     response = messagebox.askyesno("Ready to send", "Are you ready to send X emails")
 #     email_contacts = contacts_processing(fixed_excel_contacts)
@@ -151,6 +168,8 @@ def check_paths():
         pass
     elif not spredsheet_path_exists(fixed_exel_contacts):
         pass
+    if not product_expired():
+        pass
     else:
         top = email_window() # subjt, body, signature
         # print(fixed_exel_contacts)
@@ -172,6 +191,16 @@ def email_window():
         response = messagebox.askyesno("Ready to send", "Are you ready to send {} emails?".format(num_emails))
         if response:
             # print(contacts_df)
+            # NEW CHANGES
+            # TODO fix bug were it does not create a new token every time
+            if file_run_counter('run_counter') or current_date('date_counter') == 0:
+                if os.path.exists("token.pickle"):
+                    os.remove("token.pickle")
+                    print('token deleted')
+                else:
+                    pass
+            else:
+                pass
             service = gmail_authenticate(fixed_json_key)
             megamail_send(service, contacts_df, personal_email, subjt.get(), body.get(1.0, END))
             Label(window, text='All Emails Sent!').grid(row=8, column=1)
@@ -181,27 +210,27 @@ def email_window():
     # TODO branches for auto name input and generic emails !!! THIS IS LAST !!!
     subjt = Entry(top, width=75, font=("calibri", 14))
     body = Text(top, width=75, font=("Calibri", 14))
-    signature_button = Button(top, text='Click to add signature?')  # if yes, else no
-    signature_name = Entry(top, width=40)
-    signature_number = Entry(top, width=40)
-    signature_email = Entry(top, width=40)
+    # signature_button = Button(top, text='Click to add signature?')  # if yes, else no
+    # signature_name = Entry(top, width=40)
+    # signature_number = Entry(top, width=40)
+    # signature_email = Entry(top, width=40)
     send_button = Button(top, text='Send', foreground='white', background="#34A2FE", width=15, command=lambda: popup(top))
     # get_text_button = Button(top, text='text box', command=getting_box)
 
     subjt.grid(row=1, column=1)
     body.grid(row=2, column=1)
-    signature_button.grid(row=3, column=1)
-    signature_name.grid(row=4, column=1)
-    signature_number.grid(row=5, column=1)
-    signature_email.grid(row=6, column=1)
-    send_button.grid(row=6, column=2)
+    # signature_button.grid(row=3, column=1)
+    # signature_name.grid(row=4, column=1)
+    # signature_number.grid(row=5, column=1)
+    # signature_email.grid(row=6, column=1)
+    send_button.grid(row=6, column=1)
     # get_text_button.grid(row=7, column=1)
 
     subjt.insert(0, "Email Subject Here")
     body.insert(INSERT, "Email Body Here")
-    signature_name.insert(0, "Enter name: John Doe")
-    signature_number.insert(0, "Enter number: Office: (999) 888 - 777")
-    signature_email.insert(0, "Enter email. J.Doe@gmail.com")
+    # signature_name.insert(0, "Enter name: John Doe")
+    # signature_number.insert(0, "Enter number: Office: (999) 888 - 777")
+    # signature_email.insert(0, "Enter email. J.Doe@gmail.com")
 
     # contacts_df = contacts_processing(fixed_excel_contacts)
     # service = gmail_authenticate(fixed_json_key)
