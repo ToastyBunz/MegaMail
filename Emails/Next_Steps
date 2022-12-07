@@ -1,0 +1,72 @@
+# Fields
+# User email
+# Json (single line)
+# excel (single line)
+# Subject (single line)
+# Body (Text box)
+# Signature (Text Box, maybe multiple single lines)
+
+# make tk pretty again https://github.com/TomSchimansky/CustomTkinter
+
+# MVP todo
+# subject box save input X
+# body save input X
+# warning pop up have number of emails X
+# email loop works X
+# body and subj into email send button sends X
+# Some sort of completed confirmation (if not loading bar) X
+# refresh token every new day login or every 24th token X (kinda needs work)
+# Remove signature X
+
+# HTML version of Warner email
+# save as exe file
+# Logo for exe
+# Set Kill date for free trial
+
+
+for week of 12/5 - 12/9
+Get outlook to send emails.
+Combine Gmail and Outlook into one Custom TK GUI.
+Set initiation disclaimer
+Save as EXE
+
+
+# level 2
+# Make TK beautiful again
+# email column input
+# attachements
+# validate email (does destination exist?)
+# Option to use name column
+# loading bar
+# HTML email
+# click add signature
+# signature
+# 2 threads (A/B testing)
+# Email statistics (opens and responses)
+# combine fixed_path into spreadsheet_path_exists and json_path exists
+
+# level 3
+# chrome extension
+# more than two strands
+
+
+# make tk pretty again https://github.com/TomSchimansky/CustomTkinter
+
+# Steps
+# pick email column and names X
+# get excel, clean X
+# print new number X
+# email subj X
+# body (with formatting) X will examine more extensively later
+# Allow for name to be replaced ... loc both name and email X
+# loop email addresses - send X
+# Add signature
+# Wrap with Tkinter GUI
+# Make TKInter pretty
+# Loading bar
+# Set a kill date for free trial
+
+# working on
+# when they confirm they are ready to send with final pop up it collects information and sends emails
+# 181-183 and 203 - 204
+# should go into 127

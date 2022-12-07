@@ -112,7 +112,7 @@ def path_exists(path):
 
 # TODO combine fixed_path into spreadsheet_path_exists and json_path exists
 def spredsheet_path_exists(path):
-    testing_path = "S:\DevStuff\EmailTesting.xlsx"
+    testing_path = "S:/Python/Code/MegaMail/Emails/Testing_Tools/EmailTesting.xlsx"
     e = '.xlsx'
     c = '.csv'
     if path.endswith(e) or path.endswith(c) and os.path.exists(path):

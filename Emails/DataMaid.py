@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-# excel_file = "S:/Python/Code/MegaMail/Emails/Testing_Tools/EmailTesting.xlsx"
+excel_file = "S:/Python/Code/MegaMail/Emails/Testing_Tools/EmailTesting.xlsx"
 # email = 'email'
 # name = 'name'
 #
@@ -54,3 +54,5 @@ def get_email_in_column(dataframe, index):
     # UNNECESSARY MEGA MAIL ALREADY DOES: This function is meant to be paired with a loop to return emails one at a time
     email_column = dataframe.columns.get_loc('email')
     return dataframe.iloc[index, email_column]
+
+print(contacts_processing("S:/Python/Code/MegaMail/Emails/Testing_Tools/EmailTesting.xlsx"))

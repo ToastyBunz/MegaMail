@@ -112,13 +112,16 @@ def send_message(service, email, destination, obj, body, attachments=[]):
 
 
 def megamail_send(service, df, sender_email, email_sbj_noname, email_body_noname, want_name=0):
+    print(df)
     for i in range(len(df)):
         destination = df.loc[i, 'email']
-        name = df.loc[i, 'name']
+        # name = df.loc[i, 'name']
         # email_sbj_name = 'Hello Mr.{}'.format(name)
         # email_body_name = 'Hello Mr.{} would you like to user our services'.format(name)
         # email_sbj_noname = 'Greetings'
         # email_body_noname = 'hello frick you, would you like to use our services'
+        print(i)
+        print(destination)
 
         if not want_name:
             send_message(service, sender_email, destination, email_sbj_noname, email_body_noname)
