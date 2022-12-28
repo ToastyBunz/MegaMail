@@ -1,5 +1,6 @@
 import tkinter
 # from tkinter import *
+from tkinter import ttk
 import customtkinter
 from customtkinter import *
 
@@ -161,6 +162,7 @@ class GmailPage(CTkFrame):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
         self.grid_columnconfigure(0, weight=8)
         self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(4, weight=4)
 
 
         label = CTkLabel(self, text='Gmail', font=LARGE_FONT, compound='center')
@@ -178,8 +180,8 @@ class GmailPage(CTkFrame):
         nxt_button_input = CTkButton(self, text='Next>',  # command=check_paths,
                                      width=100)
 
-        email_input.grid(row=2, column=0, pady=50)
-        jsan_input.grid(row=3, column=0, pady=20)
+        email_input.grid(row=2, column=0, pady=50, sticky='s')
+        jsan_input.grid(row=3, column=0, pady=20, sticky='s')
         nxt_button_input.grid(row=4, column=1, columnspan=2, sticky='sw', pady=70)
 
 
@@ -216,27 +218,54 @@ class AnalyticsPage(CTkFrame):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
         self.grid_columnconfigure(0, weight=2)
         self.grid_columnconfigure(1, weight=8)
-        self.grid_rowconfigure(1, weight=5)
-        self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(2, weight=5)
+        self.grid_rowconfigure(3, weight=5)
 
         label = CTkLabel(self, text='Analytics', font=LARGE_FONT, compound='center')
         label.grid(row=0, column=0, pady=10, padx=10, columnspan=2)
 
-        self.emails_frame = CTkFrame(self, corner_radius=0, fg_color=("gray75", "gray25"))
-        self.emails_frame.grid(row=1, column=0, sticky='nsew', rowspan=2)
+        # create Entry and Listbox
+        self.campaign_entry = CTkEntry(self, placeholder_text="Enter campaign or date")
+        self.campaign_entry.grid(row=1, column=0, pady=10, sticky='new')
 
-        self.emails_frame_label = CTkLabel(self.emails_frame, text="Emails",
-                                           compound="left",
-                                           font=CTkFont(size=15, weight="bold"))
-        self.emails_frame_label.grid(row=0, column=0, padx=10, pady=10)
+        self.campaigns_listbox = tkinter.Listbox(self, width=17, background=("grey10"),
+                                                 borderwidth=3, font=("Helvetica", 12), fg='white', relief=FLAT)
+        self.campaigns_listbox.grid(row=2, column=0, sticky='nsew', rowspan=3)
 
-        # self.listbox = CtkListbox
 
-        self.charts_frame = CTkFrame(self, corner_radius=0, fg_color='red')
-        self.charts_frame.grid(row=1, column=1, sticky='nsew')
+        self.my_list = ["one", "two", "three three three three three", 'four', 'five']
+        for i in self.my_list:
+            self.campaigns_listbox.insert(END, i)  # can also use END
+            self.campaigns_listbox.insert(END, '')  # can also use END
 
-        self.spreadsheet_frame = CTkFrame(self, corner_radius=0, fg_color='yellow')
-        self.spreadsheet_frame.grid(row=2, column=1, sticky='nsew')
+
+
+        # TODO Selected listbox anchor appears in spreadsheet frame after select_campaign click
+        def select_campaign():
+            # campaign_label.configure(text=self.campaigns_listbox.get(ANCHOR))
+            return print(self.campaigns_listbox.get(ANCHOR))
+
+
+
+        self.select_campaign_button = CTkButton(self, text='Select Campaign', command=select_campaign())
+        self.select_campaign_button.grid(row=1, column=1, padx=5, pady=5, sticky='w')
+
+        self.charts_frame = CTkFrame(self, corner_radius=0, fg_color='transparent', border_width=3)
+        self.charts_frame.grid(row=2, column=1, sticky='nsew')
+
+        def remove_row():
+            pass
+
+        self.spreadsheet_frame = CTkFrame(self, corner_radius=0, fg_color='transparent', border_width=3)
+        self.spreadsheet_frame.grid(row=3, column=1, sticky='nsew', rowspan=2)
+        self.remove_button = CTkButton(self.spreadsheet_frame, text='Remove', command=remove_row)
+        self.remove_button.grid(row=0, column=0, padx=5, pady=5)
+        self.remove_all = CTkButton(self.spreadsheet_frame, text='Remove All')
+        self.remove_all.grid(row=0, column=1, padx=5, pady=5)
+
+
+        self.campaign_label = CTkLabel(self.spreadsheet_frame, text='hello')
+        self.campaign_label.grid(row=1, column=0)
 
 
 
@@ -245,13 +274,37 @@ class ContactsPage(CTkFrame):
     def __init__(self, parent, controller):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
         self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        contacts_label = CTkLabel(self, text="Contacts", font=LARGE_FONT)
+        contacts_label.grid(row=0, column=0)
 
-        label = CTkLabel(self, text='Mega Mail', font=LARGE_FONT, anchor='n')
-        label.grid(pady=10, padx=10)
+        contact_tabs = CTkTabview(self)
+        contact_tabs.grid(row=1, column=0, sticky='nsew')
+        contact_tabs.add(" All  ")
+        contact_tabs.add(" Groups")
+        contact_tabs.add(" Import  ")
 
-        button_1 = CTkButton(self, text="This feature is not ready yet")
-        button_1.grid(row=1, column=0, padx=20, pady=10)
+        all_tree = ttk.Treeview(contact_tabs.tab(" All  "))
 
+        # define columns
+        all_tree['columns'] = ('Name', 'Email', "Age", 'Company')
+
+        # Formate our columns
+        all_tree.column('#0', width=0)
+        all_tree.column("Name", anchor='w')
+        all_tree.column("Email", anchor='w')
+        all_tree.column("Age", anchor='w')
+        all_tree.column("Company", anchor='w')
+
+        # Create Headings
+        all_tree.heading("#0", text="label", anchor='w')
+        all_tree.heading("Name", text="Name", anchor='w')
+        all_tree.heading("Email", text="Email", anchor='w')
+        all_tree.heading("Age", text="Age", anchor='w')
+        all_tree.heading("Company", text="Company", anchor='w')
+
+        all_tree.insert(parent='', index='end', iid='0', text='', values=("Name", 'thisismyemail@email.com', 25, 'bs.com'))
+        all_tree.grid(row=0, column=0)
 
 
 
