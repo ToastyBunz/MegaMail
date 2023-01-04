@@ -47,7 +47,7 @@ class MM(CTk):
         CTk.__init__(self, *args, **kwargs)
         # Root Frame
         self.title('Mega Mail')
-        self.geometry('700x450')
+        self.geometry('1100x600')
 
         # configure parameters set what percentage of the window
         # is given to each column through the weight (I think max is 10)
@@ -135,7 +135,7 @@ class MM(CTk):
         self.container.grid_rowconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (GmailPage, OutlookPage, AnalyticsPage, ContactsPage):
+        for F in (GmailPage, OutlookPage, AnalyticsPage, ContactsPage, GmailPage_2):
             frame = F(self.container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=1, sticky='nsew')
@@ -162,27 +162,125 @@ class GmailPage(CTkFrame):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
         self.grid_columnconfigure(0, weight=8)
         self.grid_columnconfigure(1, weight=1)
-        self.grid_rowconfigure(4, weight=4)
 
 
         label = CTkLabel(self, text='Gmail', font=LARGE_FONT, compound='center')
         label.grid(row=0, column=0, pady=10, padx=10, columnspan=2)
 
+        # input boxes
         email_input = CTkEntry(self, placeholder_text="Enter gmail address", width=300)
-
-        jsan_input = CTkEntry(self, placeholder_text="Paste PATH to json gmail key", width=300)
+        pass_input = CTkEntry(self, placeholder_text="Paste PATH to json gmail key", width=300)
+        campaign_input = CTkEntry(self, placeholder_text="New Campaign Name", width=300)
 
         # Add to Settings window
         # sp3 = CTkLabel(self, text="")
         # ex_label = CTkLabel(self, text="Paste PATH to contacts Excel: ")
         # exel_input = CTkEntry(self, width=60)
 
-        nxt_button_input = CTkButton(self, text='Next>',  # command=check_paths,
+        nxt_button_input = CTkButton(self, text='Next>', command=lambda: controller.show_frame(GmailPage_2, 'Gmail'),
                                      width=100)
 
-        email_input.grid(row=2, column=0, pady=50, sticky='s')
-        jsan_input.grid(row=3, column=0, pady=20, sticky='s')
-        nxt_button_input.grid(row=4, column=1, columnspan=2, sticky='sw', pady=70)
+        label.grid(row=0, column=0, pady=10, padx=10, columnspan=2)
+        email_input.grid(row=2, column=0, pady=(50, 30), padx=(135, 0))
+        pass_input.grid(row=3, column=0, pady=50, padx=(135, 0))
+        campaign_input.grid(row=4, column=0, pady=30, padx=(135, 0))
+        nxt_button_input.grid(row=5, column=1, columnspan=2, sticky='sw', pady=70)
+
+
+
+class GmailPage_2(CTkFrame):
+
+    def __init__(self, parent, controller):
+        CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
+        self.grid_columnconfigure(0, weight=1)
+        # self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(3, weight=1)
+
+        from_label = CTkLabel(self, text='From: ', font=LARGE_FONT, compound='center')
+        to_label = CTkLabel(self, text='To: ', font=LARGE_FONT, compound='center')
+
+        from_input = CTkEntry(self, placeholder_text="From: John Doe, MyCompany.net", width=300)
+
+        # Tab Frame
+        recipients_tabs = CTkTabview(self)
+        recipients_tabs.add(" All  ")
+        recipients_tabs.add(" Groups")
+        recipients_tabs.add(" New Group  ")
+
+        # Filling the "All" tab
+        all_column_label = CTkLabel(recipients_tabs.tab(" All  "), text="Which column holds emails?")
+        all_column_dropdown = CTkOptionMenu(recipients_tabs.tab(" All  "), dynamic_resizing=False, width=250,
+                                            values=["Value 1", "Value 2", "Value Long Long Long"])
+
+        # Create a frame for Radio Button and grid them
+        all_radbutton_frame = CTkFrame(recipients_tabs.tab(" All  "), fg_color="transparent")
+        all_radio_var = tkinter.IntVar(value=0)
+        all_radbutton_frame_label = CTkLabel(all_radbutton_frame, text="would you like to greet recipients by name?")
+        all_radio_button_no = CTkRadioButton(master=all_radbutton_frame, text='No', variable=all_radio_var, value=0)
+        all_radio_button_yes = CTkRadioButton(master=all_radbutton_frame, text='Yes', variable=all_radio_var, value=1)
+
+        # Grids for Rad button Frame
+        all_radbutton_frame_label.grid(row=0, column=0, columnspan=2)
+        all_radio_button_no.grid(row=1, column=0)
+        all_radio_button_yes.grid(row=1, column=2)
+
+        # back to outside radbutton frame
+        all_personalize_label = CTkLabel(recipients_tabs.tab(" All  "), text="Which column holds names?")
+        all_personalize_dropdown = CTkOptionMenu(recipients_tabs.tab(" All  "), dynamic_resizing=False, width=250,
+                                            values=["Value 1", "Value 2", "Value Long Long Long"])
+
+        # gridding the "All" tab
+        all_column_label.grid(row=0, column=0)
+        all_column_dropdown.grid(row=1, column=0)
+        all_radbutton_frame.grid(row=2, column=0, padx=20, pady=(20, 0), sticky='nsew')
+        all_personalize_label.grid(row=3, column=0)
+        all_personalize_dropdown.grid(row=4, column=0)
+
+        # Filling the Groups Tab
+        group_group_label = CTkLabel(recipients_tabs.tab(" Groups"), text="Which group would you like to use?")
+        group_column_label = CTkLabel(recipients_tabs.tab(" Groups"), text="Which column holds emails?")
+
+        group_group_dropdown = CTkOptionMenu(recipients_tabs.tab(" Groups"), dynamic_resizing=False, width=250,
+                                             values=["Value 1", "Value 2", "Value Long Long Long"])
+
+        group_column_dropdown = CTkOptionMenu(recipients_tabs.tab(" Groups"), dynamic_resizing=False, width=250,
+                                              values=["Value 1", "Value 2", "Value Long Long Long"])
+
+        group_radbutton_frame = CTkFrame(recipients_tabs.tab(" All  "), fg_color="transparent")
+        group_radio_var = tkinter.IntVar(value=0)
+        group_radbutton_frame_label = CTkLabel(all_radbutton_frame, text="would you like to greet recipients by name?")
+        group_radio_button_no = CTkRadioButton(master=all_radbutton_frame, text='No', variable=group_radio_var, value=0)
+        group_radio_button_yes = CTkRadioButton(master=all_radbutton_frame, text='Yes', variable=group_radio_var, value=1)
+
+        # inside group radframe griding
+        group_radbutton_frame_label.grid(row=0, column=0, columnspan=2)
+        group_radio_button_no.grid(row=1, column=0)
+        group_radio_button_yes.grid(row=1, column=2)
+
+
+        # grid group objects
+        group_group_label.grid(row=0, column=0)
+        group_column_label.grid(row=0, column=1)
+        group_group_dropdown.grid(row=1, column=0)
+        group_column_dropdown.grid(row=1, column=1)
+        group_radbutton_frame.grid(row=2, column=0, padx=20, pady=(20, 0), sticky='nsew')
+
+
+
+
+
+        nxt_button_input = CTkButton(self, text='Use Settings>',  # command=check_paths,
+                                     width=100)
+        bck_button_input = CTkButton(self, text='<Back', command=lambda: controller.show_frame(GmailPage, 'gmail'),
+                                     width=100)
+
+        from_label.grid(row=0, column=0, pady=(10, 5), padx=10, sticky='w')
+        from_input.grid(row=1, column=0, pady=(20, 20), padx=(100, 0), sticky='w')
+        to_label.grid(row=2, column=0, pady=5, padx=10, sticky='w')
+        # from_label.grid(row=1, column=1, pady=10, padx=10, columnspan=2)
+        recipients_tabs.grid(row=3, column=0, sticky='nsew', columnspan=2)
+        nxt_button_input.grid(row=4, column=1, sticky='sw', pady=(0, 30))
+        bck_button_input.grid(row=4, column=0, sticky='sw', pady=(0, 30))
 
 
 class OutlookPage(CTkFrame):
@@ -193,11 +291,10 @@ class OutlookPage(CTkFrame):
         self.grid_columnconfigure(1, weight=1)
 
         label = CTkLabel(self, text='Outlook', font=LARGE_FONT, compound='center')
-        label.grid(row=0, column=0, pady=10, padx=10, columnspan=2)
 
         email_input = CTkEntry(self, placeholder_text="Enter Outlook address", width=300)
-
-        jsan_input = CTkEntry(self, placeholder_text="Enter Outlook password", width=300)
+        pass_input = CTkEntry(self, placeholder_text="Enter Outlook password", width=300)
+        campaign_input = CTkEntry(self, placeholder_text="New Campaign Name", width=300)
 
         # Add to Settings window
         # sp3 = CTkLabel(self, text="")
@@ -207,9 +304,11 @@ class OutlookPage(CTkFrame):
         nxt_button_input = CTkButton(self, text='Next>',  # command=check_paths,
                                      width=100)
 
-        email_input.grid(row=2, column=0, pady=50)
-        jsan_input.grid(row=3, column=0, pady=20)
-        nxt_button_input.grid(row=4, column=1, columnspan=2, sticky='sw', pady=70)
+        label.grid(row=0, column=0, pady=10, padx=10, columnspan=2)
+        email_input.grid(row=2, column=0, pady=(50, 30), padx=(135, 0))
+        pass_input.grid(row=3, column=0, pady=50, padx=(135, 0))
+        campaign_input.grid(row=4, column=0, pady=30, padx=(135, 0))
+        nxt_button_input.grid(row=5, column=1, columnspan=2, sticky='sw', pady=70)
 
 
 class AnalyticsPage(CTkFrame):
@@ -290,14 +389,14 @@ class ContactsPage(CTkFrame):
         all_tree['columns'] = ('Name', 'Email', "Age", 'Company')
 
         # Formate our columns
-        all_tree.column('#0', width=0)
+        # all_tree.column('#0', width=0)
         all_tree.column("Name", anchor='w')
         all_tree.column("Email", anchor='w')
         all_tree.column("Age", anchor='w')
         all_tree.column("Company", anchor='w')
 
         # Create Headings
-        all_tree.heading("#0", text="label", anchor='w')
+        # all_tree.heading("#0", text="label", anchor='w')
         all_tree.heading("Name", text="Name", anchor='w')
         all_tree.heading("Email", text="Email", anchor='w')
         all_tree.heading("Age", text="Age", anchor='w')

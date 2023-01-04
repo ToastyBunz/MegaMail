@@ -1,28 +1,94 @@
+import tkinter
+# from tkinter import *
 from customtkinter import *
-from tkinter import ttk
+
+LARGE_FONT = ("Verdana", 12)
 
 class MM(CTk):
+
     def __init__(self, *args, **kwargs):
         CTk.__init__(self, *args, **kwargs)
+        container = CTkFrame(self)
+        container.pack(side='top', fill='both', expand=True)
 
-        self.title('CTK Testing')
-        self.geometry('700x450')
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
 
-        self.my_notebook = ttk.Notebook()
-        self.my_notebook.pack(pady=10)
+        self.frames = {}
+        for F in (StartPage, PageOne, PageTwo, PageThree):
+            frame = F(container, self)
+            self.frames[F] = frame
+            frame.grid(row=0, column=0, sticky='nsew')
 
-        self.frame_1 = CTkFrame(self, width=500, height=500)
-        self.frame_2 = CTkFrame(self, width=500, height=500)
+        self.show_frame(StartPage)
 
-        self.frame_1.pack(fill='both', expand=1)
-        self.frame_2.pack(fill='both', expand=1)
+    def show_frame(self, cont):
+        frame = self.frames[cont]
+        frame.tkraise()
 
+def dumb():
+    print('You push da button')
 
+class StartPage(CTkFrame):
 
-        self.my_notebook.add(self.frame_1, text='blue')
-        self.my_notebook.add(self.frame_2, text='red')
+    def __init__(self, parent, controller):
+        CTkFrame.__init__(self, parent)
+        label = CTkLabel(self, text='Mega Mail', font=LARGE_FONT)
+        label.pack(pady=10, padx=10)
+
+        button1 = CTkButton(self, text="Page One",
+                         command=lambda: controller.show_frame(PageOne))
+        button1.pack()
+        button2 = CTkButton(self, text="Page Two",
+                         command=lambda: controller.show_frame(PageTwo))
+        button2.pack()
+
+class PageOne(CTkFrame):
+
+    def __init__(self, parent, controller):
+        CTkFrame.__init__(self, parent)
+        label = CTkLabel(self, text='Page 1', font=LARGE_FONT)
+        label.pack(pady=10, padx=10)
+
+        button1 = CTkButton(self, text="back to Home",
+                         command=lambda: controller.show_frame(StartPage))
+
+        button1.pack()
+
+        button2 = CTkButton(self, text="Page 3",
+                            command=lambda: controller.show_frame(PageThree))
+
+        button2.pack()
+
+class PageTwo(CTkFrame):
+
+    def __init__(self, parent, controller):
+        CTkFrame.__init__(self, parent)
+        label = CTkLabel(self, text='Page 2', font=LARGE_FONT)
+        label.pack(pady=10, padx=10)
+
+        button1 = CTkButton(self, text="Back to Home",
+                         command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+        button2 = CTkButton(self, text="Page 1",
+                         command=lambda: controller.show_frame(PageOne))
+        button2.pack()
+
+class PageThree(CTkFrame):
+
+    def __init__(self, parent, controller):
+        CTkFrame.__init__(self, parent)
+        label = CTkLabel(self, text='Page 3', font=LARGE_FONT)
+        label.pack(pady=10, padx=10)
+
+        button1 = CTkButton(self, text="Back to Home",
+                         command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+        button2 = CTkButton(self, text="Page 1",
+                         command=lambda: controller.show_frame(PageOne))
+        button2.pack()
 
 app = MM()
 app.mainloop()
-
-
