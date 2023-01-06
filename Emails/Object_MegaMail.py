@@ -135,7 +135,7 @@ class MM(CTk):
         self.container.grid_rowconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (GmailPage, OutlookPage, AnalyticsPage, ContactsPage, GmailPage_2):
+        for F in (GmailPage, OutlookPage, AnalyticsPage, ContactsPage, GmailPage_2, GmailPage_3):
             frame = F(self.container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=1, sticky='nsew')
@@ -199,7 +199,7 @@ class GmailPage_2(CTkFrame):
         from_label = CTkLabel(self, text='From: ', font=LARGE_FONT, compound='center')
         to_label = CTkLabel(self, text='To: ', font=LARGE_FONT, compound='center')
 
-        from_input = CTkEntry(self, placeholder_text="From: John Doe, MyCompany.net", width=300)
+        from_input = CTkEntry(self, placeholder_text="E.G. John Doe or MyCompany.net", width=300)
 
         # Tab Frame
         recipients_tabs = CTkTabview(self)
@@ -236,6 +236,7 @@ class GmailPage_2(CTkFrame):
         all_personalize_label.grid(row=3, column=0)
         all_personalize_dropdown.grid(row=4, column=0)
 
+
         # Filling the Groups Tab
         group_group_label = CTkLabel(recipients_tabs.tab(" Groups"), text="Which group would you like to use?")
         group_column_label = CTkLabel(recipients_tabs.tab(" Groups"), text="Which column holds emails?")
@@ -246,16 +247,20 @@ class GmailPage_2(CTkFrame):
         group_column_dropdown = CTkOptionMenu(recipients_tabs.tab(" Groups"), dynamic_resizing=False, width=250,
                                               values=["Value 1", "Value 2", "Value Long Long Long"])
 
-        group_radbutton_frame = CTkFrame(recipients_tabs.tab(" All  "), fg_color="transparent")
+        group_radbutton_frame = CTkFrame(recipients_tabs.tab(" Groups"), fg_color="transparent")
         group_radio_var = tkinter.IntVar(value=0)
-        group_radbutton_frame_label = CTkLabel(all_radbutton_frame, text="would you like to greet recipients by name?")
-        group_radio_button_no = CTkRadioButton(master=all_radbutton_frame, text='No', variable=group_radio_var, value=0)
-        group_radio_button_yes = CTkRadioButton(master=all_radbutton_frame, text='Yes', variable=group_radio_var, value=1)
+        group_radbutton_frame_label = CTkLabel(group_radbutton_frame, text="would you like to greet recipients by name?")
+        group_radio_button_no = CTkRadioButton(master=group_radbutton_frame, text='No', variable=group_radio_var, value=0)
+        group_radio_button_yes = CTkRadioButton(master=group_radbutton_frame, text='Yes', variable=group_radio_var, value=1)
+
+        group_personalize_label = CTkLabel(recipients_tabs.tab(" Groups"), text="Which column holds names?")
+        group_personalize_dropdown = CTkOptionMenu(recipients_tabs.tab(" Groups"), dynamic_resizing=False, width=250,
+                                                 values=["Value 1", "Value 2", "Value Long Long Long"])
 
         # inside group radframe griding
-        group_radbutton_frame_label.grid(row=0, column=0, columnspan=2)
-        group_radio_button_no.grid(row=1, column=0)
-        group_radio_button_yes.grid(row=1, column=2)
+        group_radbutton_frame_label.grid(row=0, column=0, sticky='e')
+        group_radio_button_no.grid(row=0, column=1, padx=(20, 0))
+        group_radio_button_yes.grid(row=0, column=2)
 
 
         # grid group objects
@@ -264,12 +269,75 @@ class GmailPage_2(CTkFrame):
         group_group_dropdown.grid(row=1, column=0)
         group_column_dropdown.grid(row=1, column=1)
         group_radbutton_frame.grid(row=2, column=0, padx=20, pady=(20, 0), sticky='nsew')
+        group_personalize_label.grid(row=3, column=0)
+        group_personalize_dropdown.grid(row=4, column=0)
 
 
+        # Filling New Group tab
+        ngroup_name_entry = CTkEntry(recipients_tabs.tab(" New Group  "), placeholder_text="New Group Name", width=300)
 
 
+        ngroup_tree = ttk.Treeview(recipients_tabs.tab(" New Group  "))
 
-        nxt_button_input = CTkButton(self, text='Use Settings>',  # command=check_paths,
+        # define columns
+        ngroup_tree['columns'] = ('Name', 'Email', "Age", 'Company')
+
+        # Formate our columns
+        # ngroup_tree.column('#0', width=0)
+        ngroup_tree.column("Name", anchor='w')
+        ngroup_tree.column("Email", anchor='w')
+        ngroup_tree.column("Age", anchor='w')
+        ngroup_tree.column("Company", anchor='w')
+
+        # Create Headings
+        # ngroup_tree.heading("#0", text="label", anchor='w')
+        ngroup_tree.heading("Name", text="Name", anchor='w')
+        ngroup_tree.heading("Email", text="Email", anchor='w')
+        ngroup_tree.heading("Age", text="Age", anchor='w')
+        ngroup_tree.heading("Company", text="Company", anchor='w')
+
+        ngroup_tree.insert(parent='', index='end', iid='0', text='', values=("Name", 'thisismyemail@email.com', 25, 'bs.com'))
+        ngroup_all_button = CTkButton(recipients_tabs.tab(" New Group  "), text='Add contacts from All')
+        ngroup_groups_button = CTkButton(recipients_tabs.tab(" New Group  "), text='Import previous group')
+        ngroup_import_button = CTkButton(recipients_tabs.tab(" New Group  "), text='Import new contacts')
+
+        # Filling the "All" tab
+        ngroup_column_label = CTkLabel(recipients_tabs.tab(" New Group  "), text="Which column holds emails?")
+        ngroup_column_dropdown = CTkOptionMenu(recipients_tabs.tab(" New Group  "), dynamic_resizing=False, width=250,
+                                            values=["Value 1", "Value 2", "Value Long Long Long"])
+
+        # Create a frame for Radio Button and grid them
+        ngroup_radbutton_frame = CTkFrame(recipients_tabs.tab(" New Group  "), fg_color="transparent")
+        ngroup_radio_var = tkinter.IntVar(value=0)
+        ngroup_radbutton_frame_label = CTkLabel(ngroup_radbutton_frame, text="would you like to greet recipients by name?")
+        ngroup_radio_button_no = CTkRadioButton(master=ngroup_radbutton_frame, text='No', variable=ngroup_radio_var, value=0)
+        ngroup_radio_button_yes = CTkRadioButton(master=ngroup_radbutton_frame, text='Yes', variable=ngroup_radio_var, value=1)
+
+        # Grids for Rad button Frame
+        ngroup_radbutton_frame_label.grid(row=0, column=0, columnspan=2)
+        ngroup_radio_button_no.grid(row=1, column=0)
+        ngroup_radio_button_yes.grid(row=1, column=2)
+
+        # back to outside radbutton frame
+        ngroup_personalize_label = CTkLabel(recipients_tabs.tab(" New Group  "), text="Which column holds names?")
+        ngroup_personalize_dropdown = CTkOptionMenu(recipients_tabs.tab(" New Group  "), dynamic_resizing=False, width=250,
+                                                 values=["Value 1", "Value 2", "Value Long Long Long"])
+
+
+        # Gridding New Group Tab
+        ngroup_name_entry.grid(row=0, column=0)
+        ngroup_tree.grid(row=1, column=0)
+        ngroup_all_button.grid(row=2, column=0, padx=5, pady=5)
+        ngroup_groups_button.grid(row=3, column=0, padx=5, pady=5)
+        ngroup_import_button.grid(row=4, column=0, padx=5, pady=5)
+        ngroup_column_label.grid(row=5, column=0)
+        ngroup_column_dropdown.grid(row=6, column=0)
+        ngroup_radbutton_frame.grid(row=7, column=0, padx=20, pady=(20, 0), sticky='nsew')
+        ngroup_personalize_label.grid(row=8, column=0)
+        ngroup_personalize_dropdown.grid(row=9, column=0)
+
+
+        nxt_button_input = CTkButton(self, text='Use Settings>',  command=lambda: controller.show_frame(GmailPage_3, 'Gmail'),
                                      width=100)
         bck_button_input = CTkButton(self, text='<Back', command=lambda: controller.show_frame(GmailPage, 'gmail'),
                                      width=100)
@@ -281,6 +349,69 @@ class GmailPage_2(CTkFrame):
         recipients_tabs.grid(row=3, column=0, sticky='nsew', columnspan=2)
         nxt_button_input.grid(row=4, column=1, sticky='sw', pady=(0, 30))
         bck_button_input.grid(row=4, column=0, sticky='sw', pady=(0, 30))
+
+
+class GmailPage_3(CTkFrame):
+
+    def __init__(self, parent, controller):
+        CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
+        # self.grid_columnconfigure(0, weight=1)
+        # self.grid_rowconfigure(3, weight=1)
+
+        abc_label = CTkLabel(self, text='A/B/C Testing', font=LARGE_FONT)
+        abc_about_button = CTkButton(self, text='What is ABC Testing?',  command=lambda: controller.show_frame(GmailPage_3, 'Gmail'),
+                                     width=100)
+
+        abc_radbutton_frame = CTkFrame(self, fg_color="transparent")
+
+        abc_radio_var = tkinter.IntVar(value=0)
+        abc_sub_body_var = tkinter.IntVar(value=0)
+        abc_b_c_var = tkinter.IntVar(value=0)
+
+        abc_test_frame_label = CTkLabel(abc_radbutton_frame, text="Use A/B/C Testing?")
+        abc_radio_button_no = CTkRadioButton(master=abc_radbutton_frame, text='No', variable=abc_radio_var, value=0)
+        abc_radio_button_yes = CTkRadioButton(master=abc_radbutton_frame, text='Yes', variable=abc_radio_var, value=1)
+
+        abc_sub_body_label = CTkLabel(abc_radbutton_frame, text="Vary the Subject or Body")
+        abc_sub_body_button_no = CTkRadioButton(master=abc_radbutton_frame, text='Subject', variable=abc_sub_body_var, value=0)
+        abc_sub_body_button_yes = CTkRadioButton(master=abc_radbutton_frame, text='Body', variable=abc_sub_body_var, value=1)
+
+        abc_b_c_label = CTkLabel(abc_radbutton_frame, text="2 Variations(B) or 3 Variations (C)")
+        abc_b_c_button_no = CTkRadioButton(master=abc_radbutton_frame, text='B', variable=abc_b_c_var, value=0)
+        abc_b_c_button_yes = CTkRadioButton(master=abc_radbutton_frame, text='C', variable=abc_b_c_var, value=1)
+
+
+        # inside group radframe griding
+        abc_test_frame_label.grid(row=0, column=0, sticky='e', pady=25)
+        abc_radio_button_no.grid(row=0, column=1, padx=(20, 0))
+        abc_radio_button_yes.grid(row=0, column=2)
+
+        abc_sub_body_label.grid(row=1, column=0, sticky='e', pady=25)
+        abc_sub_body_button_no.grid(row=1, column=1, padx=(20, 0))
+        abc_sub_body_button_yes.grid(row=1, column=2)
+
+        abc_b_c_label.grid(row=2, column=0, sticky='e', pady=25)
+        abc_b_c_button_no.grid(row=2, column=1, padx=(20, 0))
+        abc_b_c_button_yes.grid(row=2, column=2)
+
+
+
+        abc_label.grid(row=0, column=0, padx=50, pady=50)
+        abc_about_button.grid(row=0, column=1, sticky='w')
+        abc_radbutton_frame.grid(row=1, column=0)
+
+
+class ABC_info(CTkFrame):
+
+    def __init__(self, parent, controller):
+        CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
+        # self.grid_columnconfigure(0, weight=1)
+        # self.grid_rowconfigure(3, weight=1)
+
+        self.textbox = customtkinter.CTkTextbox(self, width=250)
+        self.textbox.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.textbox.insert("0.0",
+                            "CTkTextbox\n\n" + "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\n\n" * 20)
 
 
 class OutlookPage(CTkFrame):
