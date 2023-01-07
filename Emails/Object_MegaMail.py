@@ -135,7 +135,7 @@ class MM(CTk):
         self.container.grid_rowconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (GmailPage, OutlookPage, AnalyticsPage, ContactsPage, GmailPage_2, GmailPage_3):
+        for F in (GmailPage, OutlookPage, AnalyticsPage, ContactsPage, GmailPage_2, GmailPage_3, ABC_info):
             frame = F(self.container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=1, sticky='nsew')
@@ -359,7 +359,7 @@ class GmailPage_3(CTkFrame):
         # self.grid_rowconfigure(3, weight=1)
 
         abc_label = CTkLabel(self, text='A/B/C Testing', font=LARGE_FONT)
-        abc_about_button = CTkButton(self, text='What is ABC Testing?',  command=lambda: controller.show_frame(GmailPage_3, 'Gmail'),
+        abc_about_button = CTkButton(self, text='What is ABC Testing?',  command=lambda: controller.show_frame(ABC_info, 'Gmail'),
                                      width=100)
 
         abc_radbutton_frame = CTkFrame(self, fg_color="transparent")
@@ -402,20 +402,26 @@ class GmailPage_3(CTkFrame):
 
 
 class ABC_info(CTkFrame):
-
     def __init__(self, parent, controller):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
-        # self.grid_columnconfigure(0, weight=1)
-        # self.grid_rowconfigure(3, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
 
         self.textbox = customtkinter.CTkTextbox(self, width=250)
-        self.textbox.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
-        self.textbox.insert("0.0",
-                            "CTkTextbox\n\n" + "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\n\n" * 20)
+        self.textbox.grid(row=0, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.textbox.insert("0.0", text="What is A/B Testing?:\n\n"
+                                        "A/B Testing, which can also be called splilt testing or bucket testing, is a"
+                                        " method of camparing two variations of an email subject or email body and\n"
+                                        "determining which preforms better. The Sender (You) creates two versions of"
+                                        " the same email, then the program takes the mailing list and randomly divides"
+                                        "\nthe recipiants into two groups, Group 1 receives version 1 and Group 2"
+                                        " receives version 2. After the email is sent it tracks the Open, Click"
+                                        " Through, and\nUnsubscibe Rates to determine the wininning version.\n\nIn"
+                                        " A/B/C Testing, tests a third variation and randomly splits the mailing list"
+                                        " into thirds, otherwise it is identical to A/B Testing ")
 
 
 class OutlookPage(CTkFrame):
-
     def __init__(self, parent, controller):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
         self.grid_columnconfigure(0, weight=8)
