@@ -135,7 +135,8 @@ class MM(CTk):
         self.container.grid_rowconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (GmailPage, OutlookPage, AnalyticsPage, ContactsPage, GmailPage_2, GmailPage_3, ABC_info):
+        for F in (GmailPage, OutlookPage, AnalyticsPage, ContactsPage, GmailPage_2, GmailPage_3, ABC_info, GmailPage_4,
+                  GmailPage_5, GmailPage_6, GmailPage_7, GmailPage_Sending):
             frame = F(self.container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=1, sticky='nsew')
@@ -339,7 +340,7 @@ class GmailPage_2(CTkFrame):
 
         nxt_button_input = CTkButton(self, text='Use Settings>',  command=lambda: controller.show_frame(GmailPage_3, 'Gmail'),
                                      width=100)
-        bck_button_input = CTkButton(self, text='<Back', command=lambda: controller.show_frame(GmailPage, 'gmail'),
+        bck_button_input = CTkButton(self, text='<Back', command=lambda: controller.show_frame(GmailPage, 'Gmail'),
                                      width=100)
 
         from_label.grid(row=0, column=0, pady=(10, 5), padx=10, sticky='w')
@@ -400,6 +401,16 @@ class GmailPage_3(CTkFrame):
         abc_about_button.grid(row=0, column=1, sticky='w')
         abc_radbutton_frame.grid(row=1, column=0)
 
+        # Forward and backward buttons
+        nxt_button_input = CTkButton(self, text='Use Settings>',
+                                     command=lambda: controller.show_frame(GmailPage_4, 'Gmail'),
+                                     width=100)
+        bck_button_input = CTkButton(self, text='<Back', command=lambda: controller.show_frame(GmailPage_2, 'Gmail'),
+                                     width=100)
+
+        nxt_button_input.grid(row=4, column=1, sticky='sw', pady=(0, 30))
+        bck_button_input.grid(row=4, column=0, sticky='sw', pady=(0, 30))
+
 
 class ABC_info(CTkFrame):
     def __init__(self, parent, controller):
@@ -419,6 +430,258 @@ class ABC_info(CTkFrame):
                                         " Through, and\nUnsubscibe Rates to determine the wininning version.\n\nIn"
                                         " A/B/C Testing, tests a third variation and randomly splits the mailing list"
                                         " into thirds, otherwise it is identical to A/B Testing ")
+
+        bck_button_input = CTkButton(self, text='<Back', command=lambda: controller.show_frame(GmailPage_3, 'Gmail'),
+                                     width=100)
+
+        bck_button_input.grid(row=4, column=0, sticky='sw', pady=(0, 30))
+
+
+
+class GmailPage_4(CTkFrame):
+
+    def __init__(self, parent, controller):
+        CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
+        # self.grid_columnconfigure(0, weight=1)
+        # self.grid_columnconfigure(1, weight=8)
+        # self.grid_columnconfigure(2, weight=1)
+
+        label = CTkLabel(self, text='Subjects', font=LARGE_FONT, compound='center')
+        label.grid(row=0, column=0, pady=10, padx=10, columnspan=3)
+
+        entry_frame = CTkFrame(self, fg_color="transparent")
+        entry_frame.grid(row=1, column=0, columnspan=3, pady=(100, 0))
+
+        # input boxes
+        a_label = CTkLabel(entry_frame, text='Email A')
+        subject_a_entry = CTkEntry(entry_frame, placeholder_text="Subject A", width=280)
+
+        b_label = CTkLabel(entry_frame, text='Email B')
+        subject_ab_entry = CTkEntry(entry_frame, placeholder_text="Subject B", width=280)
+
+        c_label = CTkLabel(entry_frame, text='Email C')
+        subject_c_entry = CTkEntry(entry_frame, placeholder_text="Subject C", width=280)
+
+        # gridding elements for frame
+        a_label.grid(column=0, row=0)
+        subject_a_entry.grid(column=0, row=1, padx=(0, 35))
+
+        b_label.grid(column=1, row=0)
+        subject_ab_entry.grid(column=1, row=1, padx=(0, 35))
+
+        c_label.grid(column=2, row=0)
+        subject_c_entry.grid(column=2, row=1)
+
+        # Same forward and backward buttons
+        bck_button_input = CTkButton(self, text='<Back', command=lambda: controller.show_frame(GmailPage_3, 'Gmail'),
+                                     width=100)
+
+        nxt_button_input = CTkButton(self, text='Next>', command=lambda: controller.show_frame(GmailPage_5, 'Gmail'),
+                                     width=100)
+
+        bck_button_input.grid(row=2, column=0, sticky='sw', pady=(150, 0))
+        nxt_button_input.grid(row=2, column=2, sticky='se', pady=(150, 0))
+
+
+class GmailPage_5(CTkFrame):
+
+    def __init__(self, parent, controller):
+        CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
+        # self.grid_columnconfigure(0, weight=1)
+        # self.grid_columnconfigure(1, weight=8)
+        # self.grid_columnconfigure(2, weight=1)
+
+        label = CTkLabel(self, text='Email Bodies', font=LARGE_FONT, compound='center')
+        label.grid(row=0, column=0, pady=10, padx=10, columnspan=3)
+
+        textbox_frame = CTkFrame(self, fg_color="transparent")
+        textbox_frame.grid(row=1, column=0, columnspan=3, pady=(50, 0), sticky='nsew')
+
+        # input boxes
+        a_label = CTkLabel(textbox_frame, text='Body A')
+        subject_a_box = CTkTextbox(textbox_frame, width=905, height=375)
+        import_button_box = CTkButton(textbox_frame, text='Import Template')
+        new_button_box = CTkButton(textbox_frame, text='New Template')
+
+        # gridding elements for frame
+        a_label.grid(column=0, row=0)
+        subject_a_box.grid(column=0, row=1, padx=(0, 35))
+        import_button_box.grid(column=0, row=2)
+        new_button_box.grid(column=0, row=3, pady=(10, 0))
+
+
+        # Same forward and backward buttons
+        bck_button_input = CTkButton(self, text='<Back', command=lambda: controller.show_frame(GmailPage_4, 'Gmail'),
+                                     width=100)
+
+        nxt_button_input = CTkButton(self, text='Next>', command=lambda: controller.show_frame(GmailPage_6, 'Gmail'),
+                                     width=100)
+
+        bck_button_input.grid(row=2, column=0, sticky='sw', pady=(0, 0))
+        nxt_button_input.grid(row=2, column=2, sticky='se', pady=(0, 0), padx=(0, 20))
+
+
+class GmailPage_6(CTkFrame):
+
+    def __init__(self, parent, controller):
+        CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
+        # self.grid_columnconfigure(0, weight=1)
+        # self.grid_columnconfigure(1, weight=8)
+        # self.grid_columnconfigure(2, weight=1)
+
+        label = CTkLabel(self, text='Email Bodies', font=LARGE_FONT, compound='center')
+        label.grid(row=0, column=0, pady=10, padx=10, columnspan=3)
+
+        textbox_frame = CTkFrame(self, fg_color="transparent")
+        textbox_frame.grid(row=1, column=0, columnspan=3, pady=(50, 0), sticky='nsew')
+
+        # input boxes
+        b_label = CTkLabel(textbox_frame, text='Body B')
+        subject_b_box = CTkTextbox(textbox_frame, width=905, height=375)
+        import_button_box = CTkButton(textbox_frame, text='Import Template')
+        new_button_box = CTkButton(textbox_frame, text='New Template')
+
+        # gridding elements for frame
+        b_label.grid(column=0, row=0)
+        subject_b_box.grid(column=0, row=1, padx=(0, 35))
+        import_button_box.grid(column=0, row=2)
+        new_button_box.grid(column=0, row=3, pady=(10, 0))
+
+        # Same forward and backward buttons
+        bck_button_input = CTkButton(self, text='<Back', command=lambda: controller.show_frame(GmailPage_5, 'Gmail'),
+                                     width=100)
+
+        nxt_button_input = CTkButton(self, text='Next>', command=lambda: controller.show_frame(GmailPage_7, 'Gmail'),
+                                     width=100)
+
+        bck_button_input.grid(row=2, column=0, sticky='sw', pady=(0, 0))
+        nxt_button_input.grid(row=2, column=2, sticky='se', pady=(0, 0), padx=(0, 20))
+
+
+class GmailPage_7(CTkFrame):
+
+    def __init__(self, parent, controller):
+        CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
+        # self.grid_columnconfigure(0, weight=1)
+        # self.grid_columnconfigure(1, weight=8)
+        # self.grid_columnconfigure(2, weight=1)
+
+        label = CTkLabel(self, text='Email Bodies', font=LARGE_FONT, compound='center')
+        label.grid(row=0, column=0, pady=10, padx=10, columnspan=3)
+
+        textbox_frame = CTkFrame(self, fg_color="transparent")
+        textbox_frame.grid(row=1, column=0, columnspan=3, pady=(50, 0), sticky='nsew')
+
+        # input boxes
+        c_label = CTkLabel(textbox_frame, text='Body C')
+        subject_c_box = CTkTextbox(textbox_frame, width=905, height=375)
+        import_button_box = CTkButton(textbox_frame, text='Import Template')
+        new_button_box = CTkButton(textbox_frame, text='New Template')
+
+        # gridding elements for frame
+        c_label.grid(column=0, row=0)
+        subject_c_box.grid(column=0, row=1, padx=(0, 35))
+        import_button_box.grid(column=0, row=2)
+        new_button_box.grid(column=0, row=3, pady=(10, 0))
+
+        # Same forward and backward buttons
+        bck_button_input = CTkButton(self, text='<Back', command=lambda: controller.show_frame(GmailPage_6, 'Gmail'),
+                                     width=100)
+
+        nxt_button_input = CTkButton(self, text='Next>', command=lambda: controller.show_frame(GmailPage_Sending, 'Gmail'),
+                                     width=100)
+
+        bck_button_input.grid(row=2, column=0, sticky='sw', pady=(0, 0))
+        nxt_button_input.grid(row=2, column=2, sticky='se', pady=(0, 0), padx=(0, 20))
+
+
+class GmailPage_Sending(CTkFrame):
+    # Future update allow users to change settings and names in the final page
+
+    def __init__(self, parent, controller):
+        CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
+        # self.grid_columnconfigure(0, weight=1)
+        # self.grid_columnconfigure(1, weight=8)
+        # self.grid_columnconfigure(2, weight=1)
+
+        window_label_frame = CTkFrame(self, fg_color="transparent")
+        window_label_frame.pack()
+
+        label = CTkLabel(window_label_frame, text='Sending Emails', font=LARGE_FONT, compound='center')
+        label.grid(row=0, column=0, pady=(20, 60), padx=10, columnspan=3)
+
+        campeign_settings_frame = CTkFrame(self, fg_color="transparent")
+        campeign_settings_frame.pack()
+
+        # input boxes
+        name_label = CTkLabel(campeign_settings_frame, text='Name:', font=LARGE_FONT)
+        email_label = CTkLabel(campeign_settings_frame, text='Email: ', font=LARGE_FONT)
+        campaign_label = CTkLabel(campeign_settings_frame, text='Campaign name:', font=LARGE_FONT)
+
+        name_actual_label = CTkLabel(campeign_settings_frame, text='ZZZ BBB')
+        email_actual_label = CTkLabel(campeign_settings_frame, text='ZZZ@boob.com')
+        campaign_actual_label = CTkLabel(campeign_settings_frame, text='Massive')
+
+
+        ab_label = CTkLabel(campeign_settings_frame, text='A/B/C Testing:', font=LARGE_FONT)
+        yn_label = CTkLabel(campeign_settings_frame, text='Yes (PH)')
+        sb_label = CTkLabel(campeign_settings_frame, text='Subj (PH)')
+
+
+        send_label = CTkLabel(campeign_settings_frame, text='Ready to send 3000 emails?')
+
+        send_yes_button = CTkButton(campeign_settings_frame, text='Yes')
+        send_no_button = CTkButton(campeign_settings_frame, text='No')
+
+
+        # gridding elements for frame
+        name_label.grid(row=0, column=0, padx=(0, 20))
+        email_label.grid(row=0, column=1, padx=(0, 20))
+        campaign_label.grid(row=0, column=2, padx=(0, 20))
+
+        name_actual_label.grid(row=1, column=0, padx=(0, 20))
+        email_actual_label.grid(row=1, column=1, padx=(0, 20))
+        campaign_actual_label.grid(row=1, column=2, padx=(0, 20))
+
+        ab_label.grid(row=2, column=0, padx=(0, 20), pady=40)
+        yn_label.grid(row=2, column=1, padx=(0, 20), pady=40)
+        sb_label.grid(row=2, column=2, padx=(0, 20), pady=40)
+
+        send_label.grid(row=3, column=0, columnspan=3)
+        send_yes_button.grid(row=4, column=0, columnspan=2)
+        send_no_button.grid(row=4, column=1, columnspan=2)
+
+        # Progress window
+        sending_progress_frame = CTkFrame(self, fg_color="transparent")
+        sending_progress_frame.pack()
+
+        progressbar = CTkProgressBar(sending_progress_frame, width=600)
+        progressbar.grid(row=0, column=0, padx=20, pady=(60, 0))
+        progress_tally = CTkLabel(sending_progress_frame, text='300 of 3000 sent')
+        progress_tally.grid(row=1, column=0, padx=20, pady=(10, 0))
+        progress_time = CTkLabel(sending_progress_frame, text='Approx 1hr 20min left')
+        progress_time.grid(row=2, column=0, padx=20, pady=10)
+
+
+        # Same forward and backward buttons
+        nxtbck_frame = CTkFrame(self, fg_color="transparent")
+        nxtbck_frame.pack(side=BOTTOM)
+
+        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(GmailPage_6, 'Gmail'),
+                                     width=100)
+
+        nxt_button_input = CTkButton(nxtbck_frame, text='Done', command=lambda: controller.show_frame(GmailPage, 'Gmail'),
+                                     width=100)
+
+        bck_button_input.grid(row=2, column=0, sticky='sw', pady=10, padx=(0, 720))
+        nxt_button_input.grid(row=2, column=2, sticky='se', pady=10, padx=(0, 0))
+
+
+
+
+
+
+
 
 
 class OutlookPage(CTkFrame):
