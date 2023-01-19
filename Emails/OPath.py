@@ -7,7 +7,7 @@ from customtkinter import *
 LARGE_FONT = ("Verdana", 20)
 
 
-class GmailPage(CTkFrame):
+class OutlookPage(CTkFrame):
 
     def __init__(self, parent, controller):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
@@ -17,16 +17,16 @@ class GmailPage(CTkFrame):
         window_label_frame = CTkFrame(self, fg_color="transparent")
         window_label_frame.pack()
 
-        label = CTkLabel(window_label_frame, text='Gmail', font=LARGE_FONT, compound='center')
+        label = CTkLabel(window_label_frame, text='Outlook', font=LARGE_FONT, compound='center')
         label.grid(row=0, column=0, pady=(20, 60), padx=10, columnspan=3)
 
-        gmail_inputs_frame = CTkFrame(self, fg_color="transparent")
-        gmail_inputs_frame.pack()
+        outlook_inputs_frame = CTkFrame(self, fg_color="transparent")
+        outlook_inputs_frame.pack()
 
         # input boxes
-        email_input = CTkEntry(gmail_inputs_frame, placeholder_text="Enter gmail address", width=300)
-        pass_input = CTkEntry(gmail_inputs_frame, placeholder_text="Paste PATH to json gmail key", width=300)
-        campaign_input = CTkEntry(gmail_inputs_frame, placeholder_text="New Campaign Name", width=300)
+        email_input = CTkEntry(outlook_inputs_frame, placeholder_text="Enter Outlook address", width=300)
+        pass_input = CTkEntry(outlook_inputs_frame, placeholder_text="Enter Outlook password", width=300)
+        campaign_input = CTkEntry(outlook_inputs_frame, placeholder_text="New Campaign Name", width=300)
 
         # Add to Settings window
         # sp3 = CTkLabel(self, text="")
@@ -43,13 +43,13 @@ class GmailPage(CTkFrame):
         nxtbck_frame = CTkFrame(self, fg_color="transparent")
         nxtbck_frame.pack(side=BOTTOM, anchor='e')
 
-        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(GmailPage_2, 'gmail'),
+        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(OutlookPage_2, 'outlook'),
                                      width=100)
 
         nxt_button_input.grid(row=2, column=2, sticky='se', pady=10, padx=(0, 0))
 
 
-class GmailPage_2(CTkFrame):
+class OutlookPage_2(CTkFrame):
 
     def __init__(self, parent, controller):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
@@ -230,17 +230,17 @@ class GmailPage_2(CTkFrame):
         nxtbck_frame = CTkFrame(self, fg_color="transparent")
         nxtbck_frame.pack(side=BOTTOM)
 
-        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(GmailPage, 'gmail'),
+        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(OutlookPage, 'outlook'),
                                      width=100)
 
-        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(GmailPage_3, 'gmail'),
+        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(OutlookPage_3, 'outlook'),
                                      width=100)
 
         bck_button_input.grid(row=2, column=0, sticky='sw', pady=10, padx=(0, 720))
         nxt_button_input.grid(row=2, column=2, sticky='se', pady=10, padx=(0, 0))
 
 
-class GmailPage_3(CTkFrame):
+class OutlookPage_3(CTkFrame):
 
     def __init__(self, parent, controller):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
@@ -250,7 +250,7 @@ class GmailPage_3(CTkFrame):
         abc_frame = CTkFrame(self, fg_color="transparent")
 
         abc_label = CTkLabel(abc_frame, text='A/B/C Testing', font=LARGE_FONT)
-        abc_about_button = CTkButton(abc_frame, text='What is ABC Testing?',  command=lambda: controller.show_frame(ABC_info, 'gmail'),
+        abc_about_button = CTkButton(abc_frame, text='What is ABC Testing?',  command=lambda: controller.show_frame(ABC_info, 'outlook'),
                                      width=100)
 
         # Filling abc_frame
@@ -296,10 +296,10 @@ class GmailPage_3(CTkFrame):
         nxtbck_frame = CTkFrame(self, fg_color="transparent")
         nxtbck_frame.pack(side=BOTTOM)
 
-        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(GmailPage_2, 'gmail'),
+        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(OutlookPage_2, 'outlook'),
                                      width=100)
 
-        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(GmailPage_4, 'gmail'),
+        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(OutlookPage_4, 'outlook'),
                                      width=100)
 
         bck_button_input.grid(row=2, column=0, sticky='sw', pady=10, padx=(0, 720))
@@ -325,14 +325,14 @@ class ABC_info(CTkFrame):
                                         " A/B/C Testing, tests a third variation and randomly splits the mailing list"
                                         " into thirds, otherwise it is identical to A/B Testing ")
 
-        bck_button_input = CTkButton(self, text='<Back', command=lambda: controller.show_frame(GmailPage_3, 'gmail'),
+        bck_button_input = CTkButton(self, text='<Back', command=lambda: controller.show_frame(OutlookPage_3, 'outlook'),
                                      width=100)
 
         bck_button_input.grid(row=4, column=0, sticky='sw', pady=(0, 30))
 
 
 
-class GmailPage_4(CTkFrame):
+class OutlookPage_4(CTkFrame):
 
     def __init__(self, parent, controller):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
@@ -370,17 +370,17 @@ class GmailPage_4(CTkFrame):
         nxtbck_frame = CTkFrame(self, fg_color="transparent")
         nxtbck_frame.pack(side=BOTTOM)
 
-        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(GmailPage_3, 'gmail'),
+        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(OutlookPage_3, 'outlook'),
                                      width=100)
 
-        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(GmailPage_5, 'gmail'),
+        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(OutlookPage_5, 'outlook'),
                                      width=100)
 
         bck_button_input.grid(row=2, column=0, sticky='sw', pady=10, padx=(0, 720))
         nxt_button_input.grid(row=2, column=2, sticky='se', pady=10, padx=(0, 0))
 
 
-class GmailPage_5(CTkFrame):
+class OutlookPage_5(CTkFrame):
 
     def __init__(self, parent, controller):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
@@ -416,17 +416,17 @@ class GmailPage_5(CTkFrame):
         nxtbck_frame = CTkFrame(self, fg_color="transparent")
         nxtbck_frame.pack(side=BOTTOM)
 
-        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(GmailPage_4, 'gmail'),
+        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(OutlookPage_4, 'outlook'),
                                      width=100)
 
-        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(GmailPage_6, 'gmail'),
+        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(OutlookPage_6, 'outlook'),
                                      width=100)
 
         bck_button_input.grid(row=2, column=0, sticky='sw', pady=10, padx=(0, 720))
         nxt_button_input.grid(row=2, column=2, sticky='se', pady=10, padx=(0, 0))
 
 
-class GmailPage_6(CTkFrame):
+class OutlookPage_6(CTkFrame):
 
     def __init__(self, parent, controller):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
@@ -462,17 +462,17 @@ class GmailPage_6(CTkFrame):
         nxtbck_frame = CTkFrame(self, fg_color="transparent")
         nxtbck_frame.pack(side=BOTTOM)
 
-        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(GmailPage_5, 'gmail'),
+        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(OutlookPage_5, 'outlook'),
                                      width=100)
 
-        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(GmailPage_7, 'gmail'),
+        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(OutlookPage_7, 'outlook'),
                                      width=100)
 
         bck_button_input.grid(row=2, column=0, sticky='sw', pady=10, padx=(0, 720))
         nxt_button_input.grid(row=2, column=2, sticky='se', pady=10, padx=(0, 0))
 
 
-class GmailPage_7(CTkFrame):
+class OutlookPage_7(CTkFrame):
 
     def __init__(self, parent, controller):
         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
@@ -508,17 +508,17 @@ class GmailPage_7(CTkFrame):
         nxtbck_frame = CTkFrame(self, fg_color="transparent")
         nxtbck_frame.pack(side=BOTTOM)
 
-        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(GmailPage_6, 'gmail'),
+        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(OutlookPage_6, 'outlook'),
                                      width=100)
 
-        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(GmailPage_Sending, 'gmail'),
+        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(OutlookPage_Sending, 'outlook'),
                                      width=100)
 
         bck_button_input.grid(row=2, column=0, sticky='sw', pady=10, padx=(0, 720))
         nxt_button_input.grid(row=2, column=2, sticky='se', pady=10, padx=(0, 0))
 
 
-class GmailPage_Sending(CTkFrame):
+class OutlookPage_Sending(CTkFrame):
     # Future update allow users to change settings and names in the final page
 
     def __init__(self, parent, controller):
@@ -589,10 +589,10 @@ class GmailPage_Sending(CTkFrame):
         nxtbck_frame = CTkFrame(self, fg_color="transparent")
         nxtbck_frame.pack(side=BOTTOM)
 
-        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(GmailPage_6, 'gmail'),
+        bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(OutlookPage_6, 'outlook'),
                                      width=100)
 
-        nxt_button_input = CTkButton(nxtbck_frame, text='Done', command=lambda: controller.show_frame(GmailPage, 'gmail'),
+        nxt_button_input = CTkButton(nxtbck_frame, text='Done', command=lambda: controller.show_frame(OutlookPage, 'outlook'),
                                      width=100)
 
         bck_button_input.grid(row=2, column=0, sticky='sw', pady=10, padx=(0, 720))

@@ -4,6 +4,7 @@ from tkinter import ttk
 import customtkinter
 from customtkinter import *
 from Emails import GPath
+from Emails import OPath
 
 """Notes for tomorrow
 Goal 3 frames
@@ -135,13 +136,14 @@ class MM(CTk):
         self.container.grid_rowconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (GmailPage, OutlookPage, AnalyticsPage, ContactsPage, GmailPage_2, GmailPage_3, ABC_info, GmailPage_4,
-                  GmailPage_5, GmailPage_6, GmailPage_7, GmailPage_Sending):
+        for F in (GmailPage, AnalyticsPage, ContactsPage, GmailPage_2, GmailPage_3, ABC_info_gmail, GmailPage_4,
+                  GmailPage_5, GmailPage_6, GmailPage_7, GmailPage_Sending, OutlookPage, OutlookPage_2, OutlookPage_3,
+                  OutlookPage_4, OutlookPage_5, OutlookPage_6, OutlookPage_7, OutlookPage_Sending, ABC_info_outlook):
             frame = F(self.container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=1, sticky='nsew')
 
-        self.show_frame(GmailPage, 'Gmail')
+        self.show_frame(GmailPage, 'gmail')
 
     def show_frame(self, cont, button_name):
         frame = self.frames[cont]
@@ -155,9 +157,8 @@ class MM(CTk):
     def change_appearance_mode_event(self, new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
 
-# Creating Frames for different paths (Gmail, Outlook, Analytics, Contacts)
 
-
+# Assign Classes from Opath to Variables
 GmailPage = GPath.GmailPage
 GmailPage_2 = GPath.GmailPage_2
 GmailPage_3 = GPath.GmailPage_3
@@ -166,34 +167,48 @@ GmailPage_5 = GPath.GmailPage_5
 GmailPage_6 = GPath.GmailPage_6
 GmailPage_7 = GPath.GmailPage_7
 GmailPage_Sending = GPath.GmailPage_Sending
-ABC_info = GPath.ABC_info
+ABC_info_gmail = GPath.ABC_info
 
 
-class OutlookPage(CTkFrame):
-    def __init__(self, parent, controller):
-        CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
-        self.grid_columnconfigure(0, weight=8)
-        self.grid_columnconfigure(1, weight=1)
+# Assign Classes from OPath to Variables
+OutlookPage = OPath.OutlookPage
+OutlookPage_2 = OPath.OutlookPage_2
+OutlookPage_3 = OPath.OutlookPage_3
+OutlookPage_4 = OPath.OutlookPage_4
+OutlookPage_5 = OPath.OutlookPage_5
+OutlookPage_6 = OPath.OutlookPage_6
+OutlookPage_7 = OPath.OutlookPage_7
+OutlookPage_Sending = OPath.OutlookPage_Sending
+ABC_info_outlook = OPath.ABC_info
 
-        label = CTkLabel(self, text='Outlook', font=LARGE_FONT, compound='center')
 
-        email_input = CTkEntry(self, placeholder_text="Enter Outlook address", width=300)
-        pass_input = CTkEntry(self, placeholder_text="Enter Outlook password", width=300)
-        campaign_input = CTkEntry(self, placeholder_text="New Campaign Name", width=300)
 
-        # Add to Settings window
-        # sp3 = CTkLabel(self, text="")
-        # ex_label = CTkLabel(self, text="Paste PATH to contacts Excel: ")
-        # exel_input = CTkEntry(self, width=60)
 
-        nxt_button_input = CTkButton(self, text='Next>',  # command=check_paths,
-                                     width=100)
-
-        label.grid(row=0, column=0, pady=10, padx=10, columnspan=2)
-        email_input.grid(row=2, column=0, pady=(50, 30), padx=(135, 0))
-        pass_input.grid(row=3, column=0, pady=50, padx=(135, 0))
-        campaign_input.grid(row=4, column=0, pady=30, padx=(135, 0))
-        nxt_button_input.grid(row=5, column=1, columnspan=2, sticky='sw', pady=70)
+# class OutlookPage(CTkFrame):
+#     def __init__(self, parent, controller):
+#         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
+#         self.grid_columnconfigure(0, weight=8)
+#         self.grid_columnconfigure(1, weight=1)
+#
+#         label = CTkLabel(self, text='Outlook', font=LARGE_FONT, compound='center')
+#
+#         email_input = CTkEntry(self, placeholder_text="Enter Outlook address", width=300)
+#         pass_input = CTkEntry(self, placeholder_text="Enter Outlook password", width=300)
+#         campaign_input = CTkEntry(self, placeholder_text="New Campaign Name", width=300)
+#
+#         # Add to Settings window
+#         # sp3 = CTkLabel(self, text="")
+#         # ex_label = CTkLabel(self, text="Paste PATH to contacts Excel: ")
+#         # exel_input = CTkEntry(self, width=60)
+#
+#         nxt_button_input = CTkButton(self, text='Next>',  # command=check_paths,
+#                                      width=100)
+#
+#         label.grid(row=0, column=0, pady=10, padx=10, columnspan=2)
+#         email_input.grid(row=2, column=0, pady=(50, 30), padx=(135, 0))
+#         pass_input.grid(row=3, column=0, pady=50, padx=(135, 0))
+#         campaign_input.grid(row=4, column=0, pady=30, padx=(135, 0))
+#         nxt_button_input.grid(row=5, column=1, columnspan=2, sticky='sw', pady=70)
 
 
 class AnalyticsPage(CTkFrame):
