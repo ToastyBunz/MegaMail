@@ -168,8 +168,8 @@ def check_paths():
         pass
     elif not spredsheet_path_exists(fixed_exel_contacts):
         pass
-    if not product_expired():
-        pass
+    # if not product_expired():
+    #     pass
     else:
         top = email_window() # subjt, body, signature
         # print(fixed_exel_contacts)

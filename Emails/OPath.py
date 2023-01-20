@@ -7,6 +7,28 @@ from customtkinter import *
 LARGE_FONT = ("Verdana", 20)
 
 
+def combine_funcs(*funcs):
+    # this function will call the passed functions
+    # with the arguments that are passed to the functions
+    def inner_combined_func(*args, **kwargs):
+        for f in funcs:
+            # Calling functions with arguments, if any
+            f(*args, **kwargs)
+
+    # returning the reference of inner_combined_func
+    # this reference will have the called result of all
+    # the functions that are passed to the combined_funcs
+    return inner_combined_func
+
+def personal_info(email, pw, camp):
+    global o_email
+    global o_pass
+    global o_campaign
+    o_email = email
+    o_pass = pw
+    o_campaign = camp
+
+
 class OutlookPage(CTkFrame):
 
     def __init__(self, parent, controller):
@@ -43,7 +65,7 @@ class OutlookPage(CTkFrame):
         nxtbck_frame = CTkFrame(self, fg_color="transparent")
         nxtbck_frame.pack(side=BOTTOM, anchor='e')
 
-        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(OutlookPage_2, 'outlook'),
+        nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=combine_funcs(lambda: controller.show_frame(OutlookPage_2, 'outlook'), lambda: personal_info(email_input.get(), pass_input.get(), campaign_input.get())),
                                      width=100)
 
         nxt_button_input.grid(row=2, column=2, sticky='se', pady=10, padx=(0, 0))

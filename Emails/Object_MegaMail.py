@@ -182,35 +182,6 @@ OutlookPage_Sending = OPath.OutlookPage_Sending
 ABC_info_outlook = OPath.ABC_info
 
 
-
-
-# class OutlookPage(CTkFrame):
-#     def __init__(self, parent, controller):
-#         CTkFrame.__init__(self, parent, corner_radius=0, fg_color="transparent")
-#         self.grid_columnconfigure(0, weight=8)
-#         self.grid_columnconfigure(1, weight=1)
-#
-#         label = CTkLabel(self, text='Outlook', font=LARGE_FONT, compound='center')
-#
-#         email_input = CTkEntry(self, placeholder_text="Enter Outlook address", width=300)
-#         pass_input = CTkEntry(self, placeholder_text="Enter Outlook password", width=300)
-#         campaign_input = CTkEntry(self, placeholder_text="New Campaign Name", width=300)
-#
-#         # Add to Settings window
-#         # sp3 = CTkLabel(self, text="")
-#         # ex_label = CTkLabel(self, text="Paste PATH to contacts Excel: ")
-#         # exel_input = CTkEntry(self, width=60)
-#
-#         nxt_button_input = CTkButton(self, text='Next>',  # command=check_paths,
-#                                      width=100)
-#
-#         label.grid(row=0, column=0, pady=10, padx=10, columnspan=2)
-#         email_input.grid(row=2, column=0, pady=(50, 30), padx=(135, 0))
-#         pass_input.grid(row=3, column=0, pady=50, padx=(135, 0))
-#         campaign_input.grid(row=4, column=0, pady=30, padx=(135, 0))
-#         nxt_button_input.grid(row=5, column=1, columnspan=2, sticky='sw', pady=70)
-
-
 class AnalyticsPage(CTkFrame):
 
     def __init__(self, parent, controller):
