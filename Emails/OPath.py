@@ -3,6 +3,7 @@ import tkinter
 from tkinter import ttk
 import customtkinter
 from customtkinter import *
+from tkinter import filedialog
 
 LARGE_FONT = ("Verdana", 20)
 
@@ -27,6 +28,32 @@ def personal_info(email, pw, camp):
     o_email = email
     o_pass = pw
     o_campaign = camp
+
+def file_searching(frame):
+    frame.filename = filedialog.askopenfilename(title='Select A File', filetypes=(('csv files', '*.csv'), ('Excel files', "*.xlsx"), ("All Files", "*.*")))
+    group_path = str(frame.filename)
+    # open group in treeview
+    # allow user to add or delete contacts (maybe rename columns?)
+    # clean items in email column
+    # check if there is a mega mail groups file
+    # if there is not create a file and create a csv that is a copy of new csv and name it "all contacts"
+    # if there is append it to the file with the new group name tacked on the end
+    # append new csv to "all contacts" csv
+
+
+# open groups
+# for item in mega mail folder dropdown takes last element of path as name
+
+# all
+# "all contacts csv"
+
+def remove_contact():
+    pass
+
+
+
+
+
 
 
 class OutlookPage(CTkFrame):
@@ -178,6 +205,18 @@ class OutlookPage_2(CTkFrame):
         ngroup_name_entry = CTkEntry(recipients_tabs.tab(" New Group  "), placeholder_text="New Group Name", width=300)
 
 
+        # buttons for import
+        ngroup_tree_buttons_frame = CTkFrame(recipients_tabs.tab(" New Group  "), fg_color="transparent")
+
+        ngroup_all_button = CTkButton(ngroup_tree_buttons_frame, text='Add contacts from All')
+        ngroup_groups_button = CTkButton(ngroup_tree_buttons_frame, text='Import previous group')
+        ngroup_import_button = CTkButton(ngroup_tree_buttons_frame, text='Import new contacts', command=lambda: file_searching(self))
+
+        # filling ngroup_tree_buttons_frame
+        ngroup_all_button.grid(row=0, column=0, padx=(0, 20))
+        ngroup_groups_button.grid(row=0, column=1, padx=(0, 20))
+        ngroup_import_button.grid(row=0, column=2)
+
         ngroup_tree = ttk.Treeview(recipients_tabs.tab(" New Group  "))
 
         # define columns
@@ -198,20 +237,16 @@ class OutlookPage_2(CTkFrame):
         ngroup_tree.heading("Company", text="Company", anchor='w')
 
         ngroup_tree.insert(parent='', index='end', iid='0', text='', values=("Name", 'thisismyemail@email.com', 25, 'bs.com'))
-        ngroup_tree_buttons_frame = CTkFrame(recipients_tabs.tab(" New Group  "), fg_color="transparent")
 
+        # Add and remove contacts
+        add_remove_frame = CTkFrame(recipients_tabs.tab(" New Group  "), fg_color="transparent")
+        # Add popup needs to have a number of columns equal to the number in the csv
+        remove_button = CTkButton(add_remove_frame, text='Remove Selected Contact', command=lambda: remove_contact())
 
+        # gridding add_remove_frame
+        remove_button.grid(row=0, column=0, padx=(800, 0))
 
-        ngroup_all_button = CTkButton(ngroup_tree_buttons_frame, text='Add contacts from All')
-        ngroup_groups_button = CTkButton(ngroup_tree_buttons_frame, text='Import previous group')
-        ngroup_import_button = CTkButton(ngroup_tree_buttons_frame, text='Import new contacts')
-
-        # filling ngroup_tree_buttons_frame
-        ngroup_all_button.grid(row=0, column=0, padx=(0, 20))
-        ngroup_groups_button.grid(row=0, column=1, padx=(0, 20))
-        ngroup_import_button.grid(row=0, column=2)
-
-        # Filling the "New Group" tab
+        # Email column
         ngroup_column_label = CTkLabel(recipients_tabs.tab(" New Group  "), text="Which column holds emails?")
         ngroup_column_dropdown = CTkOptionMenu(recipients_tabs.tab(" New Group  "), dynamic_resizing=False, width=250,
                                             values=["Value 1", "Value 2", "Value Long Long Long"])
@@ -236,16 +271,14 @@ class OutlookPage_2(CTkFrame):
 
         # Gridding New Group Tab
         ngroup_name_entry.pack(pady=(30, 10))
-        ngroup_tree.pack(pady=(0, 10))
         ngroup_tree_buttons_frame.pack(pady=(0, 10))
+        ngroup_tree.pack(pady=(0, 10))
+        add_remove_frame.pack()
         ngroup_column_label.pack()
         ngroup_column_dropdown.pack(pady=(0, 20))
-        ngroup_radbutton_frame.pack(pady=(0, 20))
         ngroup_personalize_label.pack()
-        ngroup_personalize_dropdown.pack()
-
-
-
+        ngroup_personalize_dropdown.pack(pady=(0, 20))
+        ngroup_radbutton_frame.pack()
         recipients_tabs.pack()
 
         # Same forward and backward buttons
