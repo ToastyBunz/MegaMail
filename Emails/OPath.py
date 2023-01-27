@@ -1,4 +1,8 @@
 import tkinter
+import pandas as pd
+import sqlite3
+import os
+from pathlib import Path
 # from tkinter import *
 from tkinter import ttk
 import customtkinter
@@ -29,30 +33,170 @@ def personal_info(email, pw, camp):
     o_pass = pw
     o_campaign = camp
 
-def file_searching(frame):
-    frame.filename = filedialog.askopenfilename(title='Select A File', filetypes=(('csv files', '*.csv'), ('Excel files', "*.xlsx"), ("All Files", "*.*")))
-    group_path = str(frame.filename)
-    # open group in treeview
-    # allow user to add or delete contacts (maybe rename columns?)
-    # clean items in email column
-    # check if there is a mega mail groups file
-    # if there is not create a file and create a csv that is a copy of new csv and name it "all contacts"
-    # if there is append it to the file with the new group name tacked on the end
-    # append new csv to "all contacts" csv
 
-
-# open groups
-# for item in mega mail folder dropdown takes last element of path as name
-
-# all
-# "all contacts csv"
-
-def remove_contact():
+def check_db_exist():
+    # create a callback when the entrybox is modifyed
+    # check if "contact_data" folder exists
+    # if exists compare entrybox to already created file names
+    # if name already exists entry box glows red and message appears to the right "this file name already exists"
     pass
 
 
+class MyError(Exception):
+    def __int__(self, message):
+        self.message = message
 
 
+unknown_file = MyError('Unknown filetype, please enter CSV or Excel')
+
+
+def contacts_processing(outreach_file):
+    # need to take in email and name variables
+    if outreach_file.lower().endswith('.xlsx'):
+        df = pd.DataFrame(pd.read_excel(outreach_file))
+    elif outreach_file.lower().endswith('.csv'):
+        df = pd.DataFrame(pd.read_csv(outreach_file))
+    else:
+        raise unknown_file
+
+    df['email'] = df['email'].astype('string')
+
+    df = df.dropna(axis=0, subset=['email'])
+    df = df.fillna(0, axis=0)
+    df = df.drop_duplicates(subset='email')
+    df = df.reset_index()
+    # if extra space before email remove
+    del df['index']
+
+    # doing the same thing with Sqlite
+    #DELETE FROM myTable WHERE myColumn IS NULL OR trim(myColumn) = '';   Removes values na and ''
+    # SELECT DISTINCT select_list FROM table; # remove duplicates
+
+
+    return df
+
+
+
+
+
+def import_new_contacts(frame):
+    # select data_type from information_schema.columns where table_schema = 'business' and able_name = 'DataTypeDemo'
+    columns = []
+    column_string = ''
+
+
+    p = Path(__file__).parents[1]
+    p_string = str(p)
+    roots = next(os.walk(p))[1]
+    temp_path = p_string + r'\temp'
+    if 'temp' in roots:
+        pass
+    else:
+        os.makedirs(temp_path)
+
+    db_temp_path = temp_path + r'\temp.db'
+    if os.path.exists(db_temp_path):
+        os.remove(db_temp_path)
+    else:
+        pass
+
+    Path(db_temp_path).touch()
+    conn = sqlite3.connect(db_temp_path)
+    c = conn.cursor()
+
+    frame.filename = filedialog.askopenfilename(title='Select A File', filetypes=(
+    ('csv files', '*.csv'), ('Excel files', "*.xlsx"),))  # ("All Files", "*.*")
+    group_path = str(frame.filename)
+    if group_path.lower().endswith('.xlsx'):
+        # df = pd.DataFrame(pd.read_excel(group_path))
+        group = pd.read_excel(group_path)
+        group.insert(0, 'id_user', group.index + 1)
+    elif group_path.lower().endswith('.csv'):
+        # df = pd.DataFrame(pd.read_csv(group_path))
+        group = pd.read_csv(group_path)
+        group.insert(0, 'id_user', group.index +1)
+        for i in group:
+            columns.append(i)
+        for i in columns[1:]:
+            str_loop = str(i)
+            column_string += ', ' + str_loop + ' text'
+    else:
+        raise unknown_file
+
+    column_string = 'id_user int' + column_string
+    # print(column_string)
+    # print(type(column_string))
+
+    c.execute('''CREATE TABLE users ({})'''.format(column_string))
+    group.to_sql('temp_db', conn, if_exists='append', index=False)
+    demo = c.execute('''SELECT * FROM temp_db''').fetchall()
+    print(demo)
+
+
+
+
+    # convert df into
+    # if temp folder creates a .db in that folder else create folder then add
+    # return path of new .db
+
+
+# def get_previous_contacts():
+#     # return list of all databases in "contact_data"
+#     print(os.path.isdir('./contact_data'))
+#     print(os.path.exists('./contact_data'))
+#     print(os.path.exists('./MegaMail/'))
+#     print(os.path.exists('/Code/MegaMail'))
+#     current_dir = os.path.dirname(os.path.abspath(__file__))
+#     print(current_dir)
+#     print(os.path.isdir(current_dir))
+
+
+def clean_data():
+    # is attached to button that cleans sqlite table
+    pass
+
+
+# S:\Python\Code\MegaMail\contact_data
+
+def import_previous_contacts():
+    # take name of file.db and return entire path
+    pass
+
+
+def database_to_treeview(): # parameters is filepath from "import new contacts" or "import previous contacts"
+    # get number columns in database
+    # loop through database and add it to treeview
+    pass
+
+
+def remove_contact():
+    # remove highlighted contact
+    pass
+
+def add_contact():
+    # opens topview
+    # pull columns from dataframe
+    # each column has an entry box below it
+    # add an Id number to contact
+    # click add contact will add
+    pass
+
+def edit_contact():
+    # same as "add_contact" but entry boxes are prefilled with current entries
+    # Clicking "edit" will change treeview which will later be saved
+    pass
+
+def new_db():
+    # when next button is pushed
+    # checks if "contact_data" exists else creates folder
+    # if no id number add them
+    # change column titles to "emails" and "names
+    # cleans emails with contatcs_processing() NEED EMAIL AND NAME COLUMNS
+    # creates a new .db using entrybox add to "contact_data"
+    # if no "all_contact" in folder creates it and appends same database else append
+    # clear temp folder
+    # returns path of new file for sending emails
+    pass
 
 
 
@@ -209,8 +353,8 @@ class OutlookPage_2(CTkFrame):
         ngroup_tree_buttons_frame = CTkFrame(recipients_tabs.tab(" New Group  "), fg_color="transparent")
 
         ngroup_all_button = CTkButton(ngroup_tree_buttons_frame, text='Add contacts from All')
-        ngroup_groups_button = CTkButton(ngroup_tree_buttons_frame, text='Import previous group')
-        ngroup_import_button = CTkButton(ngroup_tree_buttons_frame, text='Import new contacts', command=lambda: file_searching(self))
+        ngroup_groups_button = CTkButton(ngroup_tree_buttons_frame, text='Import previous group', command=lambda: get_previous_contacts())
+        ngroup_import_button = CTkButton(ngroup_tree_buttons_frame, text='Import new contacts', command=lambda: import_new_contacts(self))
 
         # filling ngroup_tree_buttons_frame
         ngroup_all_button.grid(row=0, column=0, padx=(0, 20))
@@ -241,6 +385,7 @@ class OutlookPage_2(CTkFrame):
         # Add and remove contacts
         add_remove_frame = CTkFrame(recipients_tabs.tab(" New Group  "), fg_color="transparent")
         # Add popup needs to have a number of columns equal to the number in the csv
+
         remove_button = CTkButton(add_remove_frame, text='Remove Selected Contact', command=lambda: remove_contact())
 
         # gridding add_remove_frame
@@ -288,6 +433,8 @@ class OutlookPage_2(CTkFrame):
         bck_button_input = CTkButton(nxtbck_frame, text='<Back', command=lambda: controller.show_frame(OutlookPage, 'outlook'),
                                      width=100)
 
+
+        # add additional func to check if all fields and dropdowns are filled
         nxt_button_input = CTkButton(nxtbck_frame, text='Next>', command=lambda: controller.show_frame(OutlookPage_3, 'outlook'),
                                      width=100)
 
