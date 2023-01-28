@@ -8,6 +8,7 @@ from tkinter import ttk
 import customtkinter
 from customtkinter import *
 from tkinter import filedialog
+from sqlite3 import OperationalError
 
 LARGE_FONT = ("Verdana", 20)
 
@@ -81,8 +82,9 @@ def contacts_processing(outreach_file):
 
 def import_new_contacts(frame):
     # select data_type from information_schema.columns where table_schema = 'business' and able_name = 'DataTypeDemo'
-    columns = []
+    pd_columns = []
     column_string = ''
+    db_base_columns =[]
 
 
     p = Path(__file__).parents[1]
@@ -95,10 +97,10 @@ def import_new_contacts(frame):
         os.makedirs(temp_path)
 
     db_temp_path = temp_path + r'\temp.db'
-    if os.path.exists(db_temp_path):
-        os.remove(db_temp_path)
-    else:
-        pass
+    # if os.path.exists(db_temp_path):
+    #     os.remove(db_temp_path)
+    # else:
+    #     pass
 
     Path(db_temp_path).touch()
     conn = sqlite3.connect(db_temp_path)
@@ -111,13 +113,18 @@ def import_new_contacts(frame):
         # df = pd.DataFrame(pd.read_excel(group_path))
         group = pd.read_excel(group_path)
         group.insert(0, 'id_user', group.index + 1)
+        for i in group:
+            pd_columns.append(i)
+        for i in pd_columns[1:]:
+            str_loop = str(i)
+            column_string += ', ' + str_loop + ' text'
     elif group_path.lower().endswith('.csv'):
         # df = pd.DataFrame(pd.read_csv(group_path))
         group = pd.read_csv(group_path)
         group.insert(0, 'id_user', group.index +1)
         for i in group:
-            columns.append(i)
-        for i in columns[1:]:
+            pd_columns.append(i)
+        for i in pd_columns[1:]:
             str_loop = str(i)
             column_string += ', ' + str_loop + ' text'
     else:
@@ -127,11 +134,39 @@ def import_new_contacts(frame):
     # print(column_string)
     # print(type(column_string))
 
-    c.execute('''CREATE TABLE users ({})'''.format(column_string))
+    # compare 1st database with 2nd
+    try:
+        data = c.execute('''SELECT * FROM temp_db''')
+        pd_columns.pop(0)
+        for column in data.description:
+            db_base_columns.append(column[0])
+        diff = [value for value in pd_columns if value not in db_base_columns]
+        print(diff)
+        if len(diff) > 0:
+            alter_statement = '''ALTER TABLE temp_db ADD'''
+            for i in diff:
+                alter_round = ''
+                alter_round = '{} {} text'.format(alter_statement, i)
+                # print('alter input: ', alter_round)
+                c.execute(alter_round)
+        else:
+            pass
+
+    except OperationalError:
+        c.execute('''CREATE TABLE users ({})'''.format(column_string))
+
+
+
     group.to_sql('temp_db', conn, if_exists='append', index=False)
     demo = c.execute('''SELECT * FROM temp_db''').fetchall()
     print(demo)
 
+
+    # print('hello')
+    # data = c.execute('''SELECT * FROM temp_db''')
+    # for column in data.description:
+    #     print(type(column[0]))
+    # print(pd_columns)
 
 
 
