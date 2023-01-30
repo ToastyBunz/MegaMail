@@ -77,10 +77,40 @@ def contacts_processing(outreach_file):
     return df
 
 
+def database_to_treeview(temp_path, frame): # parameters is filepath from "import new contacts" or "import previous contacts"
+    db_columns = []
+    conn = sqlite3.connect(temp_path)
+    c = conn.cursor()
+    data = c.execute("SELECT * FROM temp_db")
+    records = c.fetchall()
+    count = 0
+
+    for idx, column in enumerate(data.description):
+        db_columns.append(column[0])
+
+    columns_tupp = tuple(db_columns)
+
+    ngroup_tree = ttk.Treeview(frame)
+
+    # define columns
+    ngroup_tree['columns'] = columns_tupp
+
+    # Formate our columns
+    ngroup_tree.column('#0', width=0, stretch=NO)
+    ngroup_tree.heading("#0", text="", anchor='w')
+
+    for i in db_columns:
+        ngroup_tree.column(i, anchor='w')
+        ngroup_tree.heading(i, text=i, anchor='w')
 
 
+    for record in records:
+        ngroup_tree.insert(parent='', index='end', iid=count, text='', values=(columns_tupp))
 
-def import_new_contacts(frame):
+    pass
+
+
+def import_new_contacts(window, frame):
     # select data_type from information_schema.columns where table_schema = 'business' and able_name = 'DataTypeDemo'
     pd_columns = []
     column_string = ''
@@ -106,9 +136,9 @@ def import_new_contacts(frame):
     conn = sqlite3.connect(db_temp_path)
     c = conn.cursor()
 
-    frame.filename = filedialog.askopenfilename(title='Select A File', filetypes=(
+    window.filename = filedialog.askopenfilename(title='Select A File', filetypes=(
     ('csv files', '*.csv'), ('Excel files', "*.xlsx"),))  # ("All Files", "*.*")
-    group_path = str(frame.filename)
+    group_path = str(window.filename)
     if group_path.lower().endswith('.xlsx'):
         # df = pd.DataFrame(pd.read_excel(group_path))
         group = pd.read_excel(group_path)
@@ -141,7 +171,7 @@ def import_new_contacts(frame):
         for column in data.description:
             db_base_columns.append(column[0])
         diff = [value for value in pd_columns if value not in db_base_columns]
-        print(diff)
+        # print(diff)
         if len(diff) > 0:
             alter_statement = '''ALTER TABLE temp_db ADD'''
             for i in diff:
@@ -159,8 +189,9 @@ def import_new_contacts(frame):
 
     group.to_sql('temp_db', conn, if_exists='append', index=False)
     demo = c.execute('''SELECT * FROM temp_db''').fetchall()
-    print(demo)
+    # print(demo)
 
+    database_to_treeview(db_temp_path, frame)
 
     # print('hello')
     # data = c.execute('''SELECT * FROM temp_db''')
@@ -195,12 +226,6 @@ def clean_data():
 
 def import_previous_contacts():
     # take name of file.db and return entire path
-    pass
-
-
-def database_to_treeview(): # parameters is filepath from "import new contacts" or "import previous contacts"
-    # get number columns in database
-    # loop through database and add it to treeview
     pass
 
 
@@ -389,7 +414,7 @@ class OutlookPage_2(CTkFrame):
 
         ngroup_all_button = CTkButton(ngroup_tree_buttons_frame, text='Add contacts from All')
         ngroup_groups_button = CTkButton(ngroup_tree_buttons_frame, text='Import previous group', command=lambda: get_previous_contacts())
-        ngroup_import_button = CTkButton(ngroup_tree_buttons_frame, text='Import new contacts', command=lambda: import_new_contacts(self))
+        ngroup_import_button = CTkButton(ngroup_tree_buttons_frame, text='Import new contacts', command=lambda: import_new_contacts(self, recipients_tabs.tab(" New Group  ")))
 
         # filling ngroup_tree_buttons_frame
         ngroup_all_button.grid(row=0, column=0, padx=(0, 20))
@@ -402,14 +427,14 @@ class OutlookPage_2(CTkFrame):
         ngroup_tree['columns'] = ('Name', 'Email', "Age", 'Company')
 
         # Formate our columns
-        # ngroup_tree.column('#0', width=0)
+        ngroup_tree.column('#0', width=0, stretch=NO)
         ngroup_tree.column("Name", anchor='w')
         ngroup_tree.column("Email", anchor='w')
         ngroup_tree.column("Age", anchor='w')
         ngroup_tree.column("Company", anchor='w')
 
         # Create Headings
-        # ngroup_tree.heading("#0", text="label", anchor='w')
+        ngroup_tree.heading("#0", text="", anchor='w')
         ngroup_tree.heading("Name", text="Name", anchor='w')
         ngroup_tree.heading("Email", text="Email", anchor='w')
         ngroup_tree.heading("Age", text="Age", anchor='w')
