@@ -83,7 +83,8 @@ def database_to_treeview(temp_path, frame): # parameters is filepath from "impor
     c = conn.cursor()
     data = c.execute("SELECT * FROM temp_db")
     records = c.fetchall()
-    count = '0'
+    global count
+    count = 0
 
     for idx, column in enumerate(data.description):
         db_columns.append(column[0])
@@ -109,9 +110,15 @@ def database_to_treeview(temp_path, frame): # parameters is filepath from "impor
         for idx in record:
             record_items.append(idx)
         record_items = tuple(record_items)
-        ngroup_tree.insert(parent='', index='end', iid=count, text='', values=(record_items))
+        ngroup_tree.insert(parent='', index='end', text='', iid=count, values=(record_items))
+        count += 1
 
-    pass
+    ngroup_tree.pack(pady=(0, 10))
+
+    conn.commit()
+    conn.close()
+
+
 
 
 def import_new_contacts(window, frame):
@@ -418,7 +425,7 @@ class OutlookPage_2(CTkFrame):
         ngroup_tree_buttons_frame = CTkFrame(recipients_tabs.tab(" New Group  "), fg_color="transparent")
 
         ngroup_all_button = CTkButton(ngroup_tree_buttons_frame, text='Add contacts from All')
-        ngroup_groups_button = CTkButton(ngroup_tree_buttons_frame, text='Import previous group', command=lambda: get_previous_contacts())
+        ngroup_groups_button = CTkButton(ngroup_tree_buttons_frame, text='Import previous group') # command=lambda: get_previous_contacts()
         ngroup_import_button = CTkButton(ngroup_tree_buttons_frame, text='Import new contacts', command=lambda: import_new_contacts(self, recipients_tabs.tab(" New Group  ")))
 
         # filling ngroup_tree_buttons_frame
@@ -426,26 +433,26 @@ class OutlookPage_2(CTkFrame):
         ngroup_groups_button.grid(row=0, column=1, padx=(0, 20))
         ngroup_import_button.grid(row=0, column=2)
 
-        ngroup_tree = ttk.Treeview(recipients_tabs.tab(" New Group  "))
+        # ngroup_tree = ttk.Treeview(recipients_tabs.tab(" New Group  "))
 
-        # define columns
-        ngroup_tree['columns'] = ('Name', 'Email', "Age", 'Company')
+        # define columns ######
+        # ngroup_tree['columns'] = ('Name', 'Email', "Age", 'Company')
 
         # Formate our columns
-        ngroup_tree.column('#0', width=0, stretch=NO)
-        ngroup_tree.column("Name", anchor='w')
-        ngroup_tree.column("Email", anchor='w')
-        ngroup_tree.column("Age", anchor='w')
-        ngroup_tree.column("Company", anchor='w')
+        # ngroup_tree.column('#0', width=0, stretch=NO)
+        # ngroup_tree.column("Name", anchor='w')
+        # ngroup_tree.column("Email", anchor='w')
+        # ngroup_tree.column("Age", anchor='w')
+        # ngroup_tree.column("Company", anchor='w')
 
         # Create Headings
-        ngroup_tree.heading("#0", text="", anchor='w')
-        ngroup_tree.heading("Name", text="Name", anchor='w')
-        ngroup_tree.heading("Email", text="Email", anchor='w')
-        ngroup_tree.heading("Age", text="Age", anchor='w')
-        ngroup_tree.heading("Company", text="Company", anchor='w')
+        # ngroup_tree.heading("#0", text="", anchor='w')
+        # ngroup_tree.heading("Name", text="Name", anchor='w')
+        # ngroup_tree.heading("Email", text="Email", anchor='w')
+        # ngroup_tree.heading("Age", text="Age", anchor='w')
+        # ngroup_tree.heading("Company", text="Company", anchor='w')
 
-        ngroup_tree.insert(parent='', index='end', iid='0', text='', values=("Name", 'thisismyemail@email.com', 25, 'bs.com'))
+        # ngroup_tree.insert(parent='', index='end', iid='0', text='', values=("Name", 'thisismyemail@email.com', 25, 'bs.com'))
 
         # Add and remove contacts
         add_remove_frame = CTkFrame(recipients_tabs.tab(" New Group  "), fg_color="transparent")
@@ -482,7 +489,7 @@ class OutlookPage_2(CTkFrame):
         # Gridding New Group Tab
         ngroup_name_entry.pack(pady=(30, 10))
         ngroup_tree_buttons_frame.pack(pady=(0, 10))
-        ngroup_tree.pack(pady=(0, 10))
+        # ngroup_tree.pack(pady=(0, 10))
         add_remove_frame.pack()
         ngroup_column_label.pack()
         ngroup_column_dropdown.pack(pady=(0, 20))
