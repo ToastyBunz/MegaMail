@@ -83,7 +83,7 @@ def database_to_treeview(temp_path, frame): # parameters is filepath from "impor
     c = conn.cursor()
     data = c.execute("SELECT * FROM temp_db")
     records = c.fetchall()
-    count = 0
+    count = '0'
 
     for idx, column in enumerate(data.description):
         db_columns.append(column[0])
@@ -105,12 +105,17 @@ def database_to_treeview(temp_path, frame): # parameters is filepath from "impor
 
 
     for record in records:
-        ngroup_tree.insert(parent='', index='end', iid=count, text='', values=(columns_tupp))
+        record_items = []
+        for idx in record:
+            record_items.append(idx)
+        record_items = tuple(record_items)
+        ngroup_tree.insert(parent='', index='end', iid=count, text='', values=(record_items))
 
     pass
 
 
 def import_new_contacts(window, frame):
+    frame = frame
     # select data_type from information_schema.columns where table_schema = 'business' and able_name = 'DataTypeDemo'
     pd_columns = []
     column_string = ''

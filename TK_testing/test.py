@@ -36,10 +36,20 @@ ptest = './test.py'
 # if 'contact_data' in roots:
 #    print('True')
 
-def intersection(lst1, lst2):
-    return list(set(lst1) & set(lst2))
+# def intersection(lst1, lst2):
+#     return list(set(lst1) & set(lst2))
 
-list = [1, 2, 3, 4, 5, 6, 7]
-list2 = [4, 5, 6, 7]
-list3 = intersection(list, list2)
-print(list3)
+list = [1, 2, 3, 4]
+list2 = [[4,1], [5, 2], [6, 3], [7, 4]]
+# list3 = intersection(list, list2)
+# print(list3)
+long = []
+
+for record in list2:
+    print(record)
+    test = []
+    for i in record:
+       test.append(i)
+
+print(test)
+
