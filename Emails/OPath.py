@@ -120,7 +120,8 @@ def database_to_treeview(temp_path, frame): # parameters is filepath from "impor
 
 
 
-
+# TODO remove id_user
+# TODO update treeview rather than create a new one
 def import_new_contacts(window, frame):
     frame = frame
     # select data_type from information_schema.columns where table_schema = 'business' and able_name = 'DataTypeDemo'
